@@ -2,23 +2,30 @@
 import React, { useState } from 'react';
 import CreateStatus from './CreateStatus';
 import PostList from './PostList';
-import Comment from './Comment';
 
 function App() {
 
-  // const [currentPost, setCurrentPost] = useState('')
   const [postList, updatePostList] = useState([])
-  const [replyPost, setReplyPost] = useState(0)
+  // const [replyPost, setReplyPost] = useState(0)
+  const [deletedPost, setDeletedPost] = useState(false)
 
-  const returnPost = (post) => {
-    updatePostList([...postList, post])
+  const returnPost = ({ post, author }) => {
+    const date = new Date();
+    const postDate = date.getTime()
+    updatePostList([...postList, { post, author, postDate }])
   }
 
-  const commentThread = (id) => {
-    setReplyPost(id)
-    // Need to insert reply message below this post id
-  }
+  // const commentThread = (id) => {
+  //   setReplyPost(id)
+  //   // Need to insert reply message below this post id
+  // }
 
+  const deletePost = (id) => {
+    let posts = [...postList];
+    posts.splice(id, 1);
+    updatePostList(posts)
+    setDeletedPost(!deletedPost)
+  }
 
   return (
     <div >
@@ -30,9 +37,15 @@ function App() {
           <a className="ui item">Logout</a>
         </div>
       </div>
-      {/* <Profile /> */}
-      <CreateStatus onPostButtonClick={returnPost} />
-      <PostList posts={postList} onReShareClick={returnPost} postSelectedForReply={commentThread} />
+      <CreateStatus
+        onPostButtonClick={returnPost} />
+      <PostList
+        posts={postList}
+        deletePost={deletePost}
+        onReShareClick={returnPost}
+        // postSelectedForReply={commentThread}
+        deletedPost={deletedPost}
+      />
     </div>
   );
 }

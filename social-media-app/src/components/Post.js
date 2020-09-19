@@ -1,19 +1,12 @@
 import React, { useState } from 'react';
+import Avatar from './Avatar';
+import PostActions from './PostActions/PostActions';
+import Like from './PostActions/Like';
+import ReShare from './PostActions/ReShare';
+import Reply from './PostActions/Reply';
+import Delete from './PostActions/Delete';
 
-const Post = ({ postId, postContent, onReShareClick, postSelectedForReply }) => {
-
-    const [likes, setLikes] = useState(0)
-    const [reShares, setReShares] = useState(0)
-
-    const handleReShareClick = () => {
-        setReShares(reShares + 1)
-        onReShareClick(postContent)
-    }
-
-    const handleReplyClick = () => {
-        postSelectedForReply(postId)
-    }
-
+const Post = ({ deletePost, postId, onReShareClick, postSelectedForReply, postContent, postAuthor, postDate }) => {
     return (
         <div className="ui grid container">
             <div className="row">
@@ -21,55 +14,22 @@ const Post = ({ postId, postContent, onReShareClick, postSelectedForReply }) => 
                     <div className="ui feed">
                         <div className="event">
                             <div className="label">
-                                <img alt="avatar" src={require('../img/avatar.png')} />
+                                <Avatar alt='profile' />
                             </div>
                             <div className="content">
                                 <div className="summary">
-                                    <a>Joe Henderson</a>
-                                    <div className="date">3 days ago</div>
+                                    <a>{postAuthor}</a>
+                                    <div className="date">{postDate}</div>
                                 </div>
                                 <div className="extra text">
                                     {postContent}
                                 </div>
-                                <div className="meta">
-                                    {likes > 0 ?
-                                        <a className="like">
-                                            <i
-                                                className="like icon"
-                                                onClick={() => setLikes(likes + 1)}
-                                            >
-                                            </i> {likes}
-                                        </a>
-                                        :
-                                        <a className="like">
-                                            <i
-                                                className="like icon"
-                                                onClick={() => setLikes(likes + 1)}
-                                            >
-                                            </i>
-                                        </a>
-                                    }
-                                    {reShares > 0 ?
-                                        <a className="retweet">
-                                            <i
-                                                className="retweet icon"
-                                                onClick={handleReShareClick}
-                                            >
-                                            </i> {reShares}
-                                        </a>
-                                        :
-                                        <i
-                                            className="retweet icon"
-                                            onClick={handleReShareClick}
-                                        >
-                                        </i>
-                                    }
-                                    <i
-                                        className="reply icon"
-                                        onClick={handleReplyClick}>
-                                    </i>
-                                    <i className="trash icon"></i>
-                                </div>
+                                <PostActions>
+                                    <Like />
+                                    <ReShare onReShareClick={onReShareClick} post={postContent} />
+                                    <Reply />
+                                    <Delete deletePost={deletePost} postId={postId} />
+                                </PostActions>
                             </div>
                         </div>
                     </div>
