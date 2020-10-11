@@ -1,0 +1,10 @@
+#invertedSignUp {
+  border-color: #2185d0;
+  box-shadow: 0 0 0 2px #2185d0 inset !important;
+  color: #2185d0;
+  margin-top: 10px;
+}
+
+#loginScreen {
+  width: 75%;
+}
