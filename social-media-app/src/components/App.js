@@ -4,15 +4,17 @@ import { Router, Route } from "react-router-dom";
 import history from "../history";
 import Home from "./Home";
 import Origin from "./Origin";
+import Profile from "./Profile/Profile";
+import "../css/App.css";
 
 function App() {
   return (
-    <div className="ui container">
+    <div id="app-container">
       <Router history={history}>
         <div>
           <Route path="/" exact component={Origin} />
           <Route path="/home" exact component={Home} />
-          {/* Sign In */}
+          <Route path="/profile" exact component={Profile} />
           {/* PostBox */}
           {/* Posts */}
         </div>

@@ -32,20 +32,21 @@ class Modal extends React.Component {
     this.setState({ password: e.target.value });
   };
 
+  clearErrorMessage = () => this.setState({ errorMessage: "" });
+
   handleSubmit = (e) => {
     e.preventDefault();
     fire
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .catch((err) => {
+        this.clearErrorMessage();
         switch (err.code) {
           case "auth/email-already-in-use":
           case "auth/invalid-email":
           case "auth/weak-password":
             this.setState({ errorMessage: err.message });
             break;
-          default:
-            console.log("Unrecognized Error");
         }
       });
 
@@ -82,6 +83,7 @@ class Modal extends React.Component {
               </label>
               <input
                 id="password_input"
+                type="password"
                 placeholder="Password"
                 value={this.state.password}
                 onChange={(e) => this.handlePasswordChange(e)}

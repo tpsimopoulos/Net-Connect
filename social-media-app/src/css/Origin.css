@@ -1,10 +1,77 @@
-#invertedSignUp {
-  border-color: #2185d0;
-  box-shadow: 0 0 0 2px #2185d0 inset !important;
-  color: #2185d0;
-  margin-top: 10px;
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* border: 5px solid #00adb5;
+  border-radius: 5px; */
+  height: 100vh;
 }
 
-#loginScreen {
-  width: 75%;
+.login-header {
+  color: #00adb5;
+}
+
+/* centers form */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 75vh;
+  width: 50vh;
+  border: 5px solid #00adb5;
+  border-radius: 25px;
+}
+
+.input-fields {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  /* border: 5px solid #00adb5;
+  border-radius: 5px; */
+  height: 55vh;
+  padding-top: 15%;
+}
+
+.email-field > div {
+  margin-bottom: 10px;
+  width: 35vh;
+}
+
+.password-field > div {
+  margin-bottom: 10px;
+  width: 35vh;
+}
+
+.login-button {
+  margin-top: 5%;
+  width: 35vh;
+  height: 10%;
+  border: 1px solid #00adb5;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: #00adb5;
+  color: white;
+}
+
+.sign-up-button {
+  margin-top: 2.5%;
+  width: 35vh;
+  height: 10%;
+  color: #00adb5;
+  background-color: white;
+  border: 3px solid #00adb5;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #0099a1;
+  border: 1px solid #0099a1;
+}
+
+.sign-up-button:hover {
+  background-color: #ebebeb;
+  border: 3px solid #00adb5;
 }
