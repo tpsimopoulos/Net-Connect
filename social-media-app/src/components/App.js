@@ -3,13 +3,13 @@ import React from "react";
 import { Router, Route } from "react-router-dom";
 import history from "../history";
 import Home from "./Home";
-import Origin from "./Origin";
+import Origin from "./Login/Origin";
 import Profile from "./Profile/Profile";
 import "../css/App.css";
 
 function App() {
   return (
-    <div id="app-container">
+    <div>
       <Router history={history}>
         <div>
           <Route path="/" exact component={Origin} />

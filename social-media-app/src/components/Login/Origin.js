@@ -1,12 +1,14 @@
 import React from "react";
-import Modal from "./Modal";
-import fire from "../fire";
-import history from "../history";
-import "../css/Origin.css";
+import Modal from "../Modal";
+import SignUpModal from "./SignUpModal";
+import fire from "../../fire";
+import history from "../../history";
+import "../../css/Origin.css";
+
 // implement password reset
 class Origin extends React.Component {
   state = {
-    clicked: false,
+    modalOpen: false,
     email: "",
     password: "",
     emailError: "",
@@ -22,11 +24,11 @@ class Origin extends React.Component {
   }
 
   handleSignUpClick = () => {
-    this.setState({ clicked: !this.state.clicked });
+    this.setState({ modalOpen: true });
   };
 
-  signUpState = (bool) => {
-    this.setState({ clicked: bool });
+  handleClickOut = () => {
+    this.setState({ modalOpen: false });
   };
 
   handleEmailChange = (e) => {
@@ -108,13 +110,22 @@ class Origin extends React.Component {
               Login
             </button>
             <button
+              type="button"
               onClick={() => this.handleSignUpClick()}
-              id="invertedSignUp"
               className="sign-up-button"
             >
               Sign Up
             </button>
-            {this.state.clicked ? <Modal onDismiss={this.signUpState} /> : ""}
+            {this.state.modalOpen ? (
+              <Modal>
+                <SignUpModal
+                  modalOpen={this.state.modalOpen}
+                  handleClickOut={this.handleClickOut}
+                />
+              </Modal>
+            ) : (
+              ""
+            )}
           </div>
         </form>
       </div>

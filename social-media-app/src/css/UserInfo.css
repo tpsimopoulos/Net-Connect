@@ -1,0 +1,9 @@
+.user-info {
+  border: 1px solid orange;
+  margin-top: 3%;
+}
+
+.user-info > p {
+  color: #f5f6f7;
+  font-size: 1.5em;
+}

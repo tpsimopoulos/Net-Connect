@@ -1,0 +1,11 @@
+.post-avatar-pic {
+  display: flex;
+  justify-content: flex-end;
+  border: 1px solid burlywood;
+  width: 10%;
+}
+
+#post-avatar {
+  width: 75%;
+  height: 70%;
+}
