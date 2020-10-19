@@ -1,17 +1,29 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import history from "../../history";
+import firebase from "../../firebase";
+import InputField from "./InputField";
+import { signUp } from "../../actions";
 import "../../css/Modal.css";
-import fire from "../../fire";
+import { connect } from "react-redux";
+import { Input } from "semantic-ui-react";
 // Need to add form validation
 
 class SignUpModal extends React.Component {
   state = {
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
-    errorMessage: "",
   };
 
+  handleFirstNameChange = (e) => {
+    this.setState({ firstName: e.target.value });
+  };
+
+  handleLastNameChange = (e) => {
+    this.setState({ lastName: e.target.value });
+  };
   handleEmailChange = (e) => {
     this.setState({ email: e.target.value });
   };
@@ -24,21 +36,9 @@ class SignUpModal extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    fire
-      .auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .catch((err) => {
-        this.clearErrorMessage();
-        switch (err.code) {
-          case "auth/email-already-in-use":
-          case "auth/invalid-email":
-          case "auth/weak-password":
-            this.setState({ errorMessage: err.message });
-            break;
-        }
-      });
-
-    if (fire.auth().currentUser) {
+    console.log(this.state);
+    this.props.signUp(this.state);
+    if (firebase.auth().currentUser) {
       history.push("/home");
     }
   };
@@ -52,33 +52,31 @@ class SignUpModal extends React.Component {
       >
         <div onClick={(e) => e.stopPropagation()} className="modal-content">
           <form onSubmit={(e) => this.handleSubmit(e)}>
-            <div>
-              <div className="email-field">
-                <div className="ui input">
-                  <input
-                    className="email-input"
-                    placeholder="Email"
-                    value={this.state.email}
-                    onChange={(e) => this.handleEmailChange(e)}
-                  ></input>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div className="password-field">
-                <div className="ui input">
-                  <input
-                    id="password-input"
-                    type="password"
-                    placeholder="Password"
-                    value={this.state.password}
-                    onChange={(e) => this.handlePasswordChange(e)}
-                  ></input>
-                </div>
-              </div>
-
-              {this.state.errorMessage ? <p>{this.state.errorMessage}</p> : ""}
-            </div>
+            <InputField
+              fieldName="firstName"
+              placeholder="First Name"
+              stateValue={this.state.firstName}
+              handleChange={(e) => this.handleFirstNameChange(e)}
+            />
+            <InputField
+              fieldName="lastName"
+              placeholder="Last Name"
+              stateValue={this.state.lastName}
+              handleChange={(e) => this.handleLastNameChange(e)}
+            />
+            <InputField
+              fieldName="email"
+              placeholder="Email"
+              stateValue={this.state.email}
+              handleChange={(e) => this.handleEmailChange(e)}
+            />
+            <InputField
+              type="password"
+              fieldName="password"
+              placeholder="Password"
+              stateValue={this.state.password}
+              handleChange={(e) => this.handlePasswordChange(e)}
+            />
             <button
               id="submit-button"
               className="create-acct-button"
@@ -93,4 +91,4 @@ class SignUpModal extends React.Component {
   }
 }
 
-export default SignUpModal;
+export default connect(null, { signUp })(SignUpModal);

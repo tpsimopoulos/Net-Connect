@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import fire from "../../fire";
+import firebase from "../../firebase";
 import NavbarComponent from "./NavbarComponent";
 import history from "../../history";
 import "../../css/Navbar.css";
@@ -24,7 +24,7 @@ class Navbar extends React.Component {
             );
           })}
           <Link
-            onClick={() => fire.auth().signOut()}
+            onClick={() => firebase.auth().signOut()}
             class="right menu item"
             to="/"
           >

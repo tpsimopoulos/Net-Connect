@@ -1,0 +1,22 @@
+.home-page {
+  display: flex;
+  justify-content: center;
+  border: 1px solid orange;
+  width: 100vw;
+  height: 90vh;
+}
+
+.home-page__middle {
+  border: 1px solid #dadde1;
+  border-radius: 1%;
+  width: 45%;
+  overflow-y: scroll;
+}
+.home-page__middle::-webkit-scrollbar {
+  display: none;
+}
+
+.home-page__middle::-webkit-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

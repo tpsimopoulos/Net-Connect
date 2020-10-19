@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import "../../css/Profile.css";
 import ProfileMenuItem from "./ProfileMenuItem";
 import Navbar from "../Navbar/Navbar";
-import TextProfilePost from "./TextProfilePost";
+import TextPost from "../TextPost";
 import UserInfo from "./UserInfo";
 import ProfileAvatar from "./ProfileAvatar";
-import PostAvatar from "../PostAvatar";
+import { Redirect } from "react-router-dom";
+import "../../css/Profile.css";
+import { connect } from "react-redux";
 
 class Profile extends Component {
   state = {
@@ -17,14 +18,22 @@ class Profile extends Component {
   };
 
   render() {
+    const { auth } = this.props;
+    if (!auth.uid) return <Redirect to="/" />;
+
     return (
       <React.Fragment>
         <Navbar />
         <div className="profile-page">
-          <div className="profile-container">
-            <ProfileAvatar />
+          <div className="profile-page__detail">
+            <div className="profile-page__editProfileOption">
+              <i class="edit icon"></i>
+            </div>
+            <div className="profile-page__avatar">
+              <ProfileAvatar />
+            </div>
             <UserInfo />
-            <div className="profile-menu">
+            <div className="profile-page__menu">
               {["Posts", "Following", "Followers"].map((menu_item) => {
                 const className =
                   this.state.activeSelection === menu_item
@@ -41,11 +50,15 @@ class Profile extends Component {
                 );
               })}
             </div>
-            <TextProfilePost />
+            <TextPost />
           </div>
         </div>
       </React.Fragment>
     );
   }
 }
-export default Profile;
+
+const mapStateToProps = (state) => {
+  return { auth: state.firebase.auth };
+};
+export default connect(mapStateToProps)(Profile);

@@ -1,8 +1,10 @@
 import React from "react";
 import Modal from "../Modal";
 import SignUpModal from "./SignUpModal";
-import fire from "../../fire";
+import firebase from "../../firebase";
 import history from "../../history";
+import { connect } from "react-redux";
+import { signIn } from "../../actions";
 import "../../css/Origin.css";
 
 // implement password reset
@@ -11,12 +13,10 @@ class Origin extends React.Component {
     modalOpen: false,
     email: "",
     password: "",
-    emailError: "",
-    passwordError: "",
   };
 
   componentDidMount() {
-    fire.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         history.push("/home");
       }
@@ -39,29 +39,12 @@ class Origin extends React.Component {
     this.setState({ password: e.target.value });
   };
 
-  clearEmailError = () => this.setState({ emailError: "" });
-
-  clearPasswordError = () => this.setState({ passwordError: "" });
-
   handleSubmit = (e) => {
     e.preventDefault();
-    fire
-      .auth()
-      .signInWithEmailAndPassword(this.state.email, this.state.password)
-      .catch((err) => {
-        this.clearEmailError();
-        this.clearPasswordError();
-        switch (err.code) {
-          case "auth/invalid-email":
-          case "auth/user-disabled":
-          case "auth/user-not-found":
-            this.setState({ emailError: err.message });
-            break;
-          case "auth/wrong-password":
-            this.setState({ passwordError: err.message });
-            break;
-        }
-      });
+    this.props.signIn({
+      email: this.state.email,
+      password: this.state.password,
+    });
   };
 
   render() {
@@ -81,9 +64,9 @@ class Origin extends React.Component {
                 />
               </div>
             </div>
-            {this.state.emailError ? (
+            {this.props.errorField === "email" ? (
               <div className="ui negative message">
-                <p>{this.state.emailError}</p>
+                <p>{this.props.errorMessage}</p>
               </div>
             ) : (
               ""
@@ -99,9 +82,9 @@ class Origin extends React.Component {
                 />
               </div>
             </div>
-            {this.state.passwordError ? (
+            {this.props.errorField === "password" ? (
               <div className="ui negative message">
-                <p>{this.state.passwordError}</p>
+                <p>{this.props.errorMessage}</p>
               </div>
             ) : (
               ""
@@ -133,4 +116,11 @@ class Origin extends React.Component {
   }
 }
 
-export default Origin;
+const mapStateToProps = (state) => {
+  return {
+    errorMessage: state.auth.authResult,
+    errorField: state.auth.errorField,
+  };
+};
+
+export default connect(mapStateToProps, { signIn })(Origin);

@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "../css/Modal.css";
 // Need to add form validation
 var modalRoot = document.getElementById("modal-root");
 
