@@ -40,14 +40,14 @@ export const signUp = (credentials) => {
       .auth()
       .createUserWithEmailAndPassword(credentials.email, credentials.password)
       .then((res) => {
-        console.log(res);
-        return getFirestore()
+        getFirestore()
           .collection("users")
           .doc(res.user.uid)
           .set({
             firstName: credentials.firstName,
             lastName: credentials.lastName,
             initials: credentials.firstName[0] + credentials.lastName[0],
+            username: credentials.username,
           });
       })
       .then(() => {
@@ -58,6 +58,7 @@ export const signUp = (credentials) => {
           case "auth/email-already-in-use":
           case "auth/invalid-email":
             dispatch({ type: "EMAIL_SIGNUP_FAILED", payload: err.message });
+            break;
           case "auth/weak-password":
             dispatch({ type: "PASSWORD_SIGNUP_FAILED", payload: err.message });
             break;

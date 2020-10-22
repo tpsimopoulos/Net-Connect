@@ -34,7 +34,9 @@
   height: 96%;
   padding-left: 10px;
 }
-
+.text-post__createDate {
+  color: #f5f6f7;
+}
 .text-post__username {
   color: #f5f6f7;
 }

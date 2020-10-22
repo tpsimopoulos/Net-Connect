@@ -13,14 +13,16 @@ import {
 } from "redux-firestore";
 import { ReactReduxFirebaseProvider, getFirebase } from "react-redux-firebase";
 
-const rrfConfig = { userProfile: "users", useFireStoreForProfile: true };
-
+const rrfConfig = { userProfile: "users", useFirestoreForProfile: true };
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const initialState = {};
 const store = createStore(
   rootReducer,
   initialState,
   compose(
-    applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore })),
+    composeEnhancers(
+      applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore }))
+    ),
     reduxFirestore(firebase, rrfConfig)
   )
 );

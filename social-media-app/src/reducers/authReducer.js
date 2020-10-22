@@ -1,16 +1,36 @@
-const initState = { authResult: null, errorField: null };
+const initState = {
+  authResult: null,
+  loginErrorField: null,
+  signUpResult: null,
+  signUpErrorField: null,
+};
 
 const authReducer = (state = initState, action) => {
   switch (action.type) {
     case "LOGIN_SUCCESSFUL":
-    case "SIGNUP_SUCCESSFUL":
-      return { ...state, authResult: null, errorField: null };
+      return { ...state, authResult: null, loginErrorField: null };
     case "EMAIL_LOGIN_FAILED":
-    case "EMAIL_SIGNUP_FAILED":
-      return { ...state, authResult: action.payload, errorField: "email" };
+      return { ...state, authResult: action.payload, loginErrorField: "email" };
     case "PASSWORD_LOGIN_FAILED":
+      return {
+        ...state,
+        authResult: action.payload,
+        loginErrorField: "password",
+      };
+    case "SIGNUP_SUCCESSFUL":
+      return { ...state, signUpResult: null, signUpErrorField: null };
+    case "EMAIL_SIGNUP_FAILED":
+      return {
+        ...state,
+        signUpResult: action.payload,
+        signUpErrorField: "email",
+      };
     case "PASSWORD_SIGNUP_FAILED":
-      return { ...state, authResult: action.payload, errorField: "password" };
+      return {
+        ...state,
+        signUpResult: action.payload,
+        signUpErrorField: "password",
+      };
     default:
       return state;
   }

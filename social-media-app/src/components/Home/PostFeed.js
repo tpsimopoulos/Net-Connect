@@ -4,6 +4,7 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
+
 class PostFeed extends Component {
   render() {
     const { posts, auth } = this.props;
@@ -15,8 +16,9 @@ class PostFeed extends Component {
             return (
               <TextPost
                 key={post.id}
-                user={post.user}
-                post_body={post.post_body}
+                user={post.username}
+                post_body={post.post}
+                createDate={post.createdAt}
               />
             );
           })}

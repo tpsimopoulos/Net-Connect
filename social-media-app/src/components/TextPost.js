@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "../css/TextPost.css";
 import PostAvatar from "./PostAvatar";
+import moment from "moment";
 export default class TextPost extends Component {
   render() {
     return (
@@ -10,6 +11,11 @@ export default class TextPost extends Component {
             <PostAvatar />
           </div>
           <div className="text-post__bodyContent">
+            <h8 className="text-post__createDate">
+              {moment
+                .unix(this.props.createDate.seconds)
+                .format("MMMM Do YYYY, h:mm a")}
+            </h8>
             <h8 className="text-post__username">{this.props.user}</h8>
             <div className="text-post__body">{this.props.post_body}</div>
           </div>

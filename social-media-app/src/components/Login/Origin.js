@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "../Modal";
 import SignUpModal from "./SignUpModal";
+import InputField from "./InputField";
 import firebase from "../../firebase";
 import history from "../../history";
 import { connect } from "react-redux";
@@ -15,13 +16,7 @@ class Origin extends React.Component {
     password: "",
   };
 
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        history.push("/home");
-      }
-    });
-  }
+  componentDidMount() {}
 
   handleSignUpClick = () => {
     this.setState({ modalOpen: true });
@@ -48,22 +43,28 @@ class Origin extends React.Component {
   };
 
   render() {
+    setTimeout(() => {
+      if (!this.props.profile.isEmpty) {
+        history.push("/home");
+      }
+    }, 500);
     return (
-      <div className="login-container">
-        <form onSubmit={(e) => this.handleSubmit(e)} className="login-form">
-          <h2 className="login-header">Login</h2>
-          <div className="input-fields">
-            <div className="email-field">
-              <div className="ui left icon input">
-                <i className="user icon"></i>
-                <input
-                  onChange={(e) => this.handleEmailChange(e)}
-                  value={this.state.email}
-                  type="text"
-                  placeholder="Email"
-                />
-              </div>
-            </div>
+      <div className="login-page">
+        <form
+          onSubmit={(e) => this.handleSubmit(e)}
+          className="login-page__form"
+        >
+          <h2 className="login-page__header login-page__header--color">
+            Login
+          </h2>
+          <div className="login_page__input-fields">
+            <InputField
+              placeholder="Email"
+              inputClassName="ui left icon input"
+              icon="user icon"
+              stateValue={this.state.email}
+              handleChange={(e) => this.handleEmailChange(e)}
+            />
             {this.props.errorField === "email" ? (
               <div className="ui negative message">
                 <p>{this.props.errorMessage}</p>
@@ -71,17 +72,16 @@ class Origin extends React.Component {
             ) : (
               ""
             )}
-            <div className="password-field">
-              <div className="ui left icon input">
-                <i className="lock icon"></i>
-                <input
-                  onChange={(e) => this.handlePasswordChange(e)}
-                  value={this.state.password}
-                  type="password"
-                  placeholder="Password"
-                />
-              </div>
-            </div>
+            {console.log(this.props)}
+
+            <InputField
+              type="password"
+              placeholder="Password"
+              inputClassName="ui left icon input"
+              icon="lock icon"
+              stateValue={this.state.password}
+              handleChange={(e) => this.handlePasswordChange(e)}
+            />
             {this.props.errorField === "password" ? (
               <div className="ui negative message">
                 <p>{this.props.errorMessage}</p>
@@ -89,13 +89,13 @@ class Origin extends React.Component {
             ) : (
               ""
             )}
-            <button type="submit" className="login-button">
+            <button type="submit" className="login_page__login-button">
               Login
             </button>
             <button
               type="button"
               onClick={() => this.handleSignUpClick()}
-              className="sign-up-button"
+              className="login_page__sign-up-button"
             >
               Sign Up
             </button>
@@ -118,8 +118,9 @@ class Origin extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
+    profile: state.firebase.profile,
     errorMessage: state.auth.authResult,
-    errorField: state.auth.errorField,
+    errorField: state.auth.loginErrorField,
   };
 };
 

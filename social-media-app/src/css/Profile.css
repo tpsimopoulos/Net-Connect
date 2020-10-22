@@ -3,7 +3,7 @@
   justify-content: center;
   /* flex-direction: column; */
   /* align-items: center; */
-  border: 2px solid #00adb5;
+  border: 2px solid var(--teal);
   margin-top: 7.5vh;
   height: 86.5vh;
 }
@@ -14,11 +14,11 @@
   justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
-  border: 2px solid #00adb5;
+  border: 2px solid var(--teal);
   border-radius: 5px;
   height: 100%;
   width: 40%;
-  background-color: #18191a;
+  background-color: var(--background-color);
 }
 
 .profile-page__editProfileOption {
@@ -52,7 +52,7 @@
 
 .active-item,
 .item {
-  color: #f5f6f7;
+  color: var(--white);
   font-size: 1em;
   font-weight: 100;
   margin-left: 10%;
@@ -60,11 +60,11 @@
 }
 
 .profile-page__menu a[class="active-item"] {
-  color: #00adb5;
+  color: var(--teal);
 }
 
 .profile-page__menu a:hover {
   cursor: pointer;
   font-weight: bold;
-  color: #00adb5;
+  color: var(--teal);
 }

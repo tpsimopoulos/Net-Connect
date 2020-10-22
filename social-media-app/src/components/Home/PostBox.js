@@ -6,7 +6,7 @@ import "../../css/PostBox.css";
 
 class PostBox extends Component {
   state = {
-    user: "Ted",
+    username: this.props.username,
     post: "",
   };
 
@@ -52,4 +52,7 @@ class PostBox extends Component {
   }
 }
 
-export default connect(null, { addPost })(PostBox);
+const mapStateToProps = (state) => {
+  return { username: state.firebase.profile.username };
+};
+export default connect(mapStateToProps, { addPost })(PostBox);

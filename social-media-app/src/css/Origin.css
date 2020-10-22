@@ -1,78 +1,99 @@
-.login-container {
+.login-page {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* border: 5px solid #00adb5;
+  /* border: 5px solid var(--teal);
   border-radius: 5px; */
   height: 100vh;
-}
-
-.login-header {
-  color: #00adb5;
+  width: 100vw;
 }
 
 /* centers form */
-.login-form {
+.login-page__form {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 75vh;
-  width: 50vh;
-  border: 5px solid #00adb5;
+  border: 5px solid var(--teal);
   border-radius: 25px;
 }
 
-.input-fields {
+.login-page__header--color {
+  color: var(--teal);
+}
+
+.login_page__input-fields {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  /* border: 5px solid #00adb5;
+  /* border: 5px solid var(--teal);
   border-radius: 5px; */
-  height: 55vh;
-  padding-top: 15%;
+  width: 75%;
+  height: 75%;
+  padding-top: 1em;
+}
+.login_page__input-fields > .input:nth-of-type(1) {
+  /* border: 2px solid magenta; */
+  margin-bottom: 0.5em;
+}
+.login_page__input-fields > .input {
+  width: 75%;
 }
 
-.email-field > div {
-  margin-bottom: 10px;
-  width: 35vh;
-}
-
-.password-field > div {
-  margin-bottom: 10px;
-  width: 35vh;
-}
-
-.login-button {
-  margin-top: 5%;
-  width: 35vh;
-  height: 10%;
-  border: 1px solid #00adb5;
+.login_page__login-button {
+  margin-top: 1em;
+  width: 75%;
+  height: 2em;
+  padding: 0;
+  border: 1px solid var(--teal);
   border-radius: 10px;
   cursor: pointer;
-  background-color: #00adb5;
+  background-color: var(--teal);
   color: white;
 }
 
-.sign-up-button {
-  margin-top: 2.5%;
-  width: 35vh;
-  height: 10%;
-  color: #00adb5;
+.login_page__sign-up-button {
+  margin-top: 0.25em;
+  width: 75%;
+  height: 2em;
+  padding: 0;
+  color: var(--teal);
   background-color: white;
-  border: 3px solid #00adb5;
+  border: 3px solid var(--teal);
   border-radius: 10px;
   cursor: pointer;
 }
 
-.login-button:hover {
+.login_page__login-button:hover {
   background-color: #0099a1;
   border: 1px solid #0099a1;
 }
 
-.sign-up-button:hover {
+.login_page__sign-up-button:hover {
   background-color: #ebebeb;
-  border: 3px solid #00adb5;
+  border: 3px solid var(--teal);
+}
+
+.login_page__input-fields .negative {
+  border: 1px solid red;
+  display: inline-block;
+  width: 75%;
+  height: 25%;
+  overflow: auto;
+}
+
+@media screen and (min-width: 100px) and (max-width: 449px) {
+  .login-page__form {
+    width: 21.5rem;
+    height: 28.5rem;
+  }
+}
+
+@media screen and (min-width: 450px) {
+  .login-page__form {
+    width: 22rem;
+    height: 30rem;
+  }
 }

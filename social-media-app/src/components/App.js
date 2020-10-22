@@ -5,20 +5,23 @@ import history from "../history";
 import Home from "./Home/Home";
 import Origin from "./Login/Origin";
 import Profile from "./Profile/Profile";
+import firebase from "../firebase";
 import "../css/App.css";
 
-function App() {
-  return (
-    <div>
-      <Router history={history}>
-        <div>
-          <Route path="/" exact component={Origin} />
-          <Route path="/home" exact component={Home} />
-          <Route path="/profile" exact component={Profile} />
-        </div>
-      </Router>
-    </div>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <Router history={history}>
+          <div>
+            <Route path="/" exact component={Origin} />
+            <Route path="/home" exact component={Home} />
+            <Route path="/profile" exact component={Profile} />
+          </div>
+        </Router>
+      </div>
+    );
+  }
 }
 
 export default App;

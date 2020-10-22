@@ -1,3 +1,7 @@
 body {
-  background-color: #18191a;
+  --navbar-color: #242526;
+  --background-color: #18191a;
+  --teal: #00adb5;
+  --white: #f5f6f7;
+  background-color: var(--background-color);
 }

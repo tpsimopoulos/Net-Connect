@@ -1,18 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import history from "../../history";
-import firebase from "../../firebase";
 import InputField from "./InputField";
 import { signUp } from "../../actions";
 import "../../css/Modal.css";
 import { connect } from "react-redux";
-import { Input } from "semantic-ui-react";
 // Need to add form validation
 
 class SignUpModal extends React.Component {
   state = {
     firstName: "",
     lastName: "",
+    username: "",
     email: "",
     password: "",
   };
@@ -24,6 +23,11 @@ class SignUpModal extends React.Component {
   handleLastNameChange = (e) => {
     this.setState({ lastName: e.target.value });
   };
+
+  handleUsernameChange = (e) => {
+    this.setState({ username: e.target.value });
+  };
+
   handleEmailChange = (e) => {
     this.setState({ email: e.target.value });
   };
@@ -32,63 +36,93 @@ class SignUpModal extends React.Component {
     this.setState({ password: e.target.value });
   };
 
-  clearErrorMessage = () => this.setState({ errorMessage: "" });
-
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log(this.state);
     this.props.signUp(this.state);
-    if (firebase.auth().currentUser) {
-      history.push("/home");
-    }
   };
 
   render() {
+    setTimeout(() => {
+      if (!this.props.profile.isEmpty) {
+        history.push("/home");
+      }
+    }, 500);
     return (
       <div
         style={{ display: this.props.modalOpen ? "block" : "none" }}
-        className="modal-container"
+        className="modal"
         onClick={() => this.props.handleClickOut()}
       >
-        <div onClick={(e) => e.stopPropagation()} className="modal-content">
-          <form onSubmit={(e) => this.handleSubmit(e)}>
-            <InputField
-              fieldName="firstName"
-              placeholder="First Name"
-              stateValue={this.state.firstName}
-              handleChange={(e) => this.handleFirstNameChange(e)}
-            />
-            <InputField
-              fieldName="lastName"
-              placeholder="Last Name"
-              stateValue={this.state.lastName}
-              handleChange={(e) => this.handleLastNameChange(e)}
-            />
-            <InputField
-              fieldName="email"
-              placeholder="Email"
-              stateValue={this.state.email}
-              handleChange={(e) => this.handleEmailChange(e)}
-            />
-            <InputField
-              type="password"
-              fieldName="password"
-              placeholder="Password"
-              stateValue={this.state.password}
-              handleChange={(e) => this.handlePasswordChange(e)}
-            />
-            <button
-              id="submit-button"
-              className="create-acct-button"
-              type="submit"
+        <div className="modal__content-container">
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="modal__content modal__content--background"
+          >
+            <h2 className="modal__signUp">Signup</h2>
+            <form
+              className="modal__form"
+              onSubmit={(e) => this.handleSubmit(e)}
             >
-              Create Account
-            </button>
-          </form>
+              <InputField
+                placeholder="First Name"
+                stateValue={this.state.firstName}
+                handleChange={(e) => this.handleFirstNameChange(e)}
+              />
+              <InputField
+                placeholder="Last Name"
+                stateValue={this.state.lastName}
+                handleChange={(e) => this.handleLastNameChange(e)}
+              />
+              <InputField
+                placeholder="Username"
+                stateValue={this.state.username}
+                handleChange={(e) => this.handleUsernameChange(e)}
+              />
+              <InputField
+                placeholder="Email"
+                stateValue={this.state.email}
+                handleChange={(e) => this.handleEmailChange(e)}
+              />
+              {this.props.errorField === "email" ? (
+                <div className="ui negative message">
+                  <p>{this.props.errorMessage}</p>
+                </div>
+              ) : (
+                ""
+              )}
+              <InputField
+                type="password"
+                placeholder="Password"
+                stateValue={this.state.password}
+                handleChange={(e) => this.handlePasswordChange(e)}
+              />
+              {this.props.errorField === "password" ? (
+                <div className="ui negative message">
+                  <p>{this.props.errorMessage}</p>
+                </div>
+              ) : (
+                ""
+              )}
+              <button
+                id="submit-button"
+                className="create-acct-button"
+                type="submit"
+              >
+                Create Account
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     );
   }
 }
 
-export default connect(null, { signUp })(SignUpModal);
+const mapStateToProps = (state) => {
+  return {
+    profile: state.firebase.profile,
+    errorMessage: state.auth.signUpResult,
+    errorField: state.auth.signUpErrorField,
+  };
+};
+export default connect(mapStateToProps, { signUp })(SignUpModal);

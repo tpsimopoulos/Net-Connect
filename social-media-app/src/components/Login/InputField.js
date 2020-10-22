@@ -10,18 +10,19 @@ export default class InputField extends Component {
       handleChange,
     } = this.props;
     return (
-      <div>
-        <div className={`${this.props.fieldName}-field`}>
-          <div className="ui input">
-            <input
-              type={type ? "password" : ""}
-              className={`${fieldName}-input`}
-              placeholder={placeholder}
-              value={stateValue}
-              onChange={handleChange}
-            ></input>
-          </div>
-        </div>
+      <div
+        className={
+          this.props.inputClassName ? this.props.inputClassName : "ui input"
+        }
+      >
+        <i className={this.props.icon} />
+        <input
+          type={type ? "password" : ""}
+          className={`${fieldName}-input`}
+          placeholder={placeholder}
+          value={stateValue}
+          onChange={handleChange}
+        />
       </div>
     );
   }
