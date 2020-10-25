@@ -50,7 +50,7 @@ class Profile extends Component {
                 );
               })}
             </div>
-            <TextPost />
+            {/* <TextPost /> */}
           </div>
         </div>
       </React.Fragment>

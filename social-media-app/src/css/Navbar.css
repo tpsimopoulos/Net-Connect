@@ -3,7 +3,8 @@
 }
 
 #Navbar > a {
-  color: var(--white);
+  color: var(--teal);
+  font-size: 1.15rem;
 }
 
 #Navbar > a:hover {

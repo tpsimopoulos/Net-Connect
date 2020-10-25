@@ -5,7 +5,7 @@ import history from "../history";
 import Home from "./Home/Home";
 import Origin from "./Login/Origin";
 import Profile from "./Profile/Profile";
-import firebase from "../firebase";
+import PostDetail from "./PostDetail";
 import "../css/App.css";
 
 class App extends React.Component {
@@ -17,6 +17,7 @@ class App extends React.Component {
             <Route path="/" exact component={Origin} />
             <Route path="/home" exact component={Home} />
             <Route path="/profile" exact component={Profile} />
+            <Route path="/post/:post_id" exact component={PostDetail} />
           </div>
         </Router>
       </div>

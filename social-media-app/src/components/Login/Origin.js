@@ -60,32 +60,24 @@ class Origin extends React.Component {
           <div className="login_page__input-fields">
             <InputField
               placeholder="Email"
-              inputClassName="ui left icon input"
               icon="user icon"
               stateValue={this.state.email}
               handleChange={(e) => this.handleEmailChange(e)}
             />
-            {this.props.errorField === "email" ? (
-              <div className="ui negative message">
-                <p>{this.props.errorMessage}</p>
-              </div>
+            {this.props.errorField === "password" ? (
+              <div className="modal__form-error">{this.props.errorMessage}</div>
             ) : (
               ""
             )}
-            {console.log(this.props)}
-
             <InputField
               type="password"
               placeholder="Password"
-              inputClassName="ui left icon input"
               icon="lock icon"
               stateValue={this.state.password}
               handleChange={(e) => this.handlePasswordChange(e)}
             />
             {this.props.errorField === "password" ? (
-              <div className="ui negative message">
-                <p>{this.props.errorMessage}</p>
-              </div>
+              <div className="modal__form-error">{this.props.errorMessage}</div>
             ) : (
               ""
             )}

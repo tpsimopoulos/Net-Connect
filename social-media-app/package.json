@@ -9,6 +9,7 @@
     "axios": "^0.20.0",
     "classnames": "^2.2.6",
     "firebase": "^7.23.0",
+    "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

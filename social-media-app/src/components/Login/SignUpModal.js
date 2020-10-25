@@ -51,7 +51,9 @@ class SignUpModal extends React.Component {
       <div
         style={{ display: this.props.modalOpen ? "block" : "none" }}
         className="modal"
-        onClick={() => this.props.handleClickOut()}
+        onClick={() => {
+          this.props.handleClickOut();
+        }}
       >
         <div className="modal__content-container">
           <div
@@ -82,10 +84,15 @@ class SignUpModal extends React.Component {
                 placeholder="Email"
                 stateValue={this.state.email}
                 handleChange={(e) => this.handleEmailChange(e)}
+                errorClass={
+                  this.props.errorField === "email"
+                    ? "modal__form-email-error"
+                    : ""
+                }
               />
               {this.props.errorField === "email" ? (
-                <div className="ui negative message">
-                  <p>{this.props.errorMessage}</p>
+                <div className="modal__form-error">
+                  {this.props.errorMessage}
                 </div>
               ) : (
                 ""
@@ -95,10 +102,15 @@ class SignUpModal extends React.Component {
                 placeholder="Password"
                 stateValue={this.state.password}
                 handleChange={(e) => this.handlePasswordChange(e)}
+                errorClass={
+                  this.props.errorField === "password"
+                    ? "modal__form-password-error"
+                    : ""
+                }
               />
               {this.props.errorField === "password" ? (
-                <div className="ui negative message">
-                  <p>{this.props.errorMessage}</p>
+                <div className="modal__form-error">
+                  {this.props.errorMessage}
                 </div>
               ) : (
                 ""

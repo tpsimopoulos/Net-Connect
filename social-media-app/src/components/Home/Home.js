@@ -3,6 +3,7 @@ import PostBox from "./PostBox";
 import PostFeed from "./PostFeed";
 import Navbar from "../Navbar/Navbar";
 import "../../css/Home.css";
+import TextPost from "../TextPost";
 
 export default class Home extends Component {
   render() {
@@ -11,8 +12,10 @@ export default class Home extends Component {
         <Navbar />
         <div className="home-page">
           <div className="home-page__middle">
-            <PostBox />
-            <PostFeed />
+            <div className="middle-wrapper">
+              <PostBox />
+              <PostFeed />
+            </div>
           </div>
         </div>
       </React.Fragment>

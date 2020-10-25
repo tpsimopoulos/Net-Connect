@@ -4,22 +4,60 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 class PostFeed extends Component {
+  findMax = (postArray) => {
+    let currentMax = 0;
+    let latestPost = 0;
+    const firebasePosts = [...postArray];
+    for (let i = 0; i < firebasePosts.length; i++) {
+      if (firebasePosts[i].reshare) {
+        let maxDate = Math.max(
+          firebasePosts[i].reshareDate.seconds,
+          firebasePosts[i].createdAt.seconds
+        );
+        if (maxDate > currentMax) {
+          currentMax = maxDate;
+          latestPost = i;
+        }
+      } else if (firebasePosts[i].createdAt.seconds > currentMax) {
+        currentMax = firebasePosts[i].createdAt.seconds;
+        latestPost = i;
+      }
+    }
+    return latestPost;
+  };
+
+  orderedPosts = (posts) => {
+    var sortedPosts = [];
+    const firebasePosts = [...posts];
+    while (firebasePosts.length > 0) {
+      sortedPosts.push(...firebasePosts.splice(this.findMax(firebasePosts), 1));
+    }
+    return sortedPosts;
+  };
+
   render() {
-    const { posts, auth } = this.props;
+    const { auth, posts } = this.props;
     if (!auth.uid) return <Redirect to="/" />;
     return (
       <div className="post-feed">
         {posts &&
-          posts.map((post) => {
+          this.orderedPosts(posts).map((post) => {
             return (
-              <TextPost
-                key={post.id}
-                user={post.username}
-                post_body={post.post}
-                createDate={post.createdAt}
-              />
+              <Link to={`/post/${post.id}`}>
+                <TextPost
+                  key={post.id}
+                  user={post.username}
+                  post_body={post.post}
+                  createDate={post.createdAt}
+                  post_id={post.id}
+                  numOfLikes={post.likes}
+                  numOfReshares={post.reshares}
+                  postReshared={post.reshare}
+                />
+              </Link>
             );
           })}
       </div>

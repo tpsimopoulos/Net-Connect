@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "../css/PostAvatar.css";
 export default class PostAvatar extends Component {
   render() {
     return (

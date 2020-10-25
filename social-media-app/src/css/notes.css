@@ -1,0 +1,20 @@
+@media screen and (min-width: 1000px) {
+  .post-box {
+    width: 95%;
+    height: 10rem;
+  }
+  .post-box__postForm {
+    width: 85%;
+  }
+  .post-box__input {
+    width: 100%;
+  }
+  .post-box__input > textarea {
+    width: 95%;
+  }
+}
+
+/* avatar container stays fixed at the same width
+and avatar says same size because it's always 75% of a fixed width container */
+
+/* <i class="pencil alternate icon"></i> */

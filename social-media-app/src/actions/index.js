@@ -1,9 +1,17 @@
+import firebase from "../firebase";
+import "firebase/firestore";
+
 export const addPost = (post) => {
   return (dispatch, getState, { getFirestore }) => {
     getFirestore()
       .collection("posts")
       .add({
         ...post,
+        likes: 0,
+        retweets: 0,
+        replies: 0,
+        reshare: false,
+        reshares: 0,
         createdAt: new Date(),
       })
       .then(() => {
@@ -66,3 +74,47 @@ export const signUp = (credentials) => {
       });
   };
 };
+
+// query for original post and invoke add post on it
+export const resharePost = (id) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    getFirestore()
+      .collection("posts")
+      .doc(id)
+      .update({ reshares: firebase.firestore.FieldValue.increment(1) })
+      .then(() => {
+        getFirestore()
+          .collection("posts")
+          .doc(id)
+          .get()
+          .then((obj) => {
+            return obj.data();
+          })
+          .then((obj) => {
+            getFirestore()
+              .collection("posts")
+              .add({ ...obj, reshare: true, reshareDate: new Date() });
+          })
+          .catch((err) => console.log(err));
+      });
+  };
+};
+
+export const likePost = (id) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    getFirestore()
+      .collection("posts")
+      .doc(id)
+      .update({ likes: firebase.firestore.FieldValue.increment(1) });
+  };
+};
+
+// export const fetchPosts = () => {
+//   return async (dispatch, getState, { getFirebase, getFirestore }) => {
+//     await getFirestore()
+//       .collection("posts")
+//       .get()
+//       querySnapshot
+//       // .then((obj) => dispatch({ type: "REQUESTED_POST_DETAIL", payload: obj }));
+//   };
+// };

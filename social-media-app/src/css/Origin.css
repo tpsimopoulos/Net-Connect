@@ -34,17 +34,35 @@
   height: 75%;
   padding-top: 1em;
 }
-.login_page__input-fields > .input:nth-of-type(1) {
-  /* border: 2px solid magenta; */
+
+.login_page__input-fields input:nth-of-type(1) {
   margin-bottom: 0.5em;
 }
-.login_page__input-fields > .input {
-  width: 75%;
+.login_page__input-fields input {
+  background-color: var(--secondary-color);
+  /* border: 1px solid pink; */
+  border: none;
+  width: 85%;
+  height: 3em;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-radius: 10px;
+  color: #bdbec0;
+}
+
+.login_page__input-fields input:focus,
+.login_page__input-fields input:active {
+  outline: none;
+  border: 1px solid #bdbec0;
+}
+
+.login_page__input-fields input:focus::placeholder {
+  color: transparent;
 }
 
 .login_page__login-button {
   margin-top: 1em;
-  width: 75%;
+  width: 85%;
   height: 2em;
   padding: 0;
   border: 1px solid var(--teal);
@@ -56,7 +74,7 @@
 
 .login_page__sign-up-button {
   margin-top: 0.25em;
-  width: 75%;
+  width: 85%;
   height: 2em;
   padding: 0;
   color: var(--teal);
@@ -66,23 +84,29 @@
   cursor: pointer;
 }
 
+.login_page__login-button:focus,
+.login_page__login-button:active,
 .login_page__login-button:hover {
+  outline: none;
   background-color: #0099a1;
   border: 1px solid #0099a1;
 }
 
+.login_page__sign-up-button:focus,
+.login_page__sign-up-button:active,
 .login_page__sign-up-button:hover {
+  outline: none;
   background-color: #ebebeb;
   border: 3px solid var(--teal);
 }
 
-.login_page__input-fields .negative {
+/* .login_page__input-fields .negative {
   border: 1px solid red;
   display: inline-block;
   width: 75%;
   height: 25%;
-  overflow: auto;
-}
+  overflow: auto; */
+/* } */
 
 @media screen and (min-width: 100px) and (max-width: 449px) {
   .login-page__form {
