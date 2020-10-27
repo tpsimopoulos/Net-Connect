@@ -4,7 +4,6 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 class PostFeed extends Component {
   findMax = (postArray) => {
@@ -12,7 +11,7 @@ class PostFeed extends Component {
     let latestPost = 0;
     const firebasePosts = [...postArray];
     for (let i = 0; i < firebasePosts.length; i++) {
-      if (firebasePosts[i].reshare) {
+      if (firebasePosts[i].postReshared) {
         let maxDate = Math.max(
           firebasePosts[i].reshareDate.seconds,
           firebasePosts[i].createdAt.seconds
@@ -46,18 +45,19 @@ class PostFeed extends Component {
         {posts &&
           this.orderedPosts(posts).map((post) => {
             return (
-              <Link to={`/post/${post.id}`}>
-                <TextPost
-                  key={post.id}
-                  user={post.username}
-                  post_body={post.post}
-                  createDate={post.createdAt}
-                  post_id={post.id}
-                  numOfLikes={post.likes}
-                  numOfReshares={post.reshares}
-                  postReshared={post.reshare}
-                />
-              </Link>
+              <TextPost
+                key={post.id}
+                user={post.postAuthor}
+                post_body={post.post}
+                createDate={post.createdAt}
+                post_id={post.id}
+                numOfLikes={post.likes}
+                numOfReshares={post.reshares}
+                postReshared={post.postReshared}
+                postResharer={post.postResharer}
+                image={post.image}
+                originalPostId={post.originalPostId}
+              />
             );
           })}
       </div>

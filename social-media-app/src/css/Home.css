@@ -7,7 +7,7 @@
 }
 
 .home-page__middle {
-  border: 1px solid #dadde1;
+  /* border: 1px solid #dadde1; */
   border-radius: 1%;
   width: 100%;
   overflow-y: scroll;
@@ -18,9 +18,11 @@
 }
 
 .middle-wrapper {
-  /* border: 1px solid tomato;s   */
-  /* width: 45%; */
+  border: 1px solid tomato;
+  width: 45%;
+  height: 100%;
 }
+
 .home-page__middle::-webkit-scrollbar {
   display: none;
 }
@@ -38,24 +40,18 @@
 
 @media screen and (min-width: 540px) {
   .middle-wrapper {
-    width: 85%;
+    width: 70%;
   }
 }
 
 @media screen and (min-width: 740px) {
   .middle-wrapper {
-    width: 75%;
+    width: 60%;
   }
 }
 
 @media screen and (min-width: 940px) {
   .middle-wrapper {
-    width: 65%;
-  }
-}
-
-@media screen and (min-width: 1200px) {
-  .middle-wrapper {
-    width: 45%;
+    max-width: 35rem;
   }
 }

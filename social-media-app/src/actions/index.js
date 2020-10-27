@@ -7,15 +7,31 @@ export const addPost = (post) => {
       .collection("posts")
       .add({
         ...post,
-        likes: 0,
-        retweets: 0,
-        replies: 0,
-        reshare: false,
-        reshares: 0,
         createdAt: new Date(),
+        likes: 0,
+        replies: 0,
+        postReshared: false,
+        reshares: 0,
+        usersWhoReshared: [],
+        usersWhoLiked: [],
       })
-      .then(() => {
-        dispatch({ type: "POST_ADDED", payload: post });
+      .then((docRef) => {
+        getFirestore()
+          .collection("users")
+          .where("username", "==", post.postAuthor)
+          .get()
+          .then((querySnapshot) => {
+            querySnapshot.forEach((user) => {
+              getFirestore()
+                .collection("users")
+                .doc(user.id)
+                .update({
+                  authoredPosts: firebase.firestore.FieldValue.arrayUnion(
+                    docRef.id
+                  ),
+                });
+            });
+          });
       })
       .catch((err) => console.log(err));
   };
@@ -56,6 +72,8 @@ export const signUp = (credentials) => {
             lastName: credentials.lastName,
             initials: credentials.firstName[0] + credentials.lastName[0],
             username: credentials.username,
+            authoredPosts: [],
+            resharedPosts: [],
           });
       })
       .then(() => {
@@ -75,46 +93,137 @@ export const signUp = (credentials) => {
   };
 };
 
-// query for original post and invoke add post on it
-export const resharePost = (id) => {
+// if reshare is true and username equals loggedInUser, throw error (you can only retweet once)
+// user can only retweet original post once
+export const resharePost = (post_id, loggedInUser, originalPostId) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
     getFirestore()
       .collection("posts")
-      .doc(id)
-      .update({ reshares: firebase.firestore.FieldValue.increment(1) })
-      .then(() => {
-        getFirestore()
-          .collection("posts")
-          .doc(id)
-          .get()
-          .then((obj) => {
-            return obj.data();
-          })
-          .then((obj) => {
-            getFirestore()
-              .collection("posts")
-              .add({ ...obj, reshare: true, reshareDate: new Date() });
-          })
-          .catch((err) => console.log(err));
-      });
-  };
-};
-
-export const likePost = (id) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
-    getFirestore()
-      .collection("posts")
-      .doc(id)
-      .update({ likes: firebase.firestore.FieldValue.increment(1) });
+      .doc(post_id)
+      .get()
+      .then((obj) => {
+        const post = obj.data();
+        const { postReshared, postAuthor, postResharer } = post;
+        // post reshared and post resharer is logged in
+        if (postReshared && postResharer === loggedInUser) {
+          getFirestore()
+            .collection("posts")
+            .doc(post_id)
+            .delete()
+            .then(() => {
+              getFirestore()
+                .collection("posts")
+                .doc(originalPostId)
+                .update({
+                  reshares: firebase.firestore.FieldValue.increment(-1),
+                  usersWhoReshared: firebase.firestore.FieldValue.arrayRemove(
+                    loggedInUser
+                  ),
+                });
+            });
+        } else {
+          return post;
+        }
+      })
+      .then((post) => {
+        // prevents user from resharing the ORIGINAL post
+        const { usersWhoReshared } = post;
+        if (usersWhoReshared.includes(loggedInUser)) {
+          throw "User Already Reshared";
+        } else {
+          // recording which users have reshared this post
+          getFirestore()
+            .collection("posts")
+            .doc(post_id)
+            .update({
+              usersWhoReshared: firebase.firestore.FieldValue.arrayUnion(
+                loggedInUser
+              ),
+            })
+            .then(() => {
+              // adding 1 to the original post's reshare count
+              getFirestore()
+                .collection("posts")
+                .doc(post_id)
+                .update({
+                  reshares: firebase.firestore.FieldValue.increment(1),
+                })
+                .then(() => {
+                  // retrieve that updated document
+                  getFirestore()
+                    .collection("posts")
+                    .doc(post_id)
+                    .get()
+                    .then((obj) => {
+                      const post = obj.data();
+                      return post;
+                    })
+                    // add a new document (new post) with contents from the above document plus
+                    // two additional properties
+                    .then((post) => {
+                      getFirestore()
+                        .collection("posts")
+                        .add({
+                          ...post,
+                          originalPostId: post_id,
+                          postResharer: loggedInUser,
+                          postReshared: true,
+                          reshareDate: new Date(),
+                        })
+                        // get reference to this new document and append to user's resharedPosts
+                        // the reference to this document
+                        .then((docRef) => {
+                          getFirestore()
+                            .collection("users")
+                            .where("username", "==", post.postAuthor)
+                            .get()
+                            .then((querySnapshot) => {
+                              querySnapshot.forEach((user) => {
+                                getFirestore()
+                                  .collection("users")
+                                  .doc(user.id)
+                                  .update({
+                                    resharedPosts: firebase.firestore.FieldValue.arrayUnion(
+                                      docRef.id
+                                    ),
+                                  });
+                              });
+                            });
+                        });
+                    });
+                });
+            });
+        }
+      })
+      .catch((err) => console.log(err));
   };
 };
 
 // export const fetchPosts = () => {
-//   return async (dispatch, getState, { getFirebase, getFirestore }) => {
-//     await getFirestore()
+//   return (dispatch, getState, { getFirebase, getFirestore }) => {
+
+//   }
+// }
+
+// export const likePost = (post_id, PostLiker) => {
+//   return (dispatch, getState, { getFirebase, getFirestore }) => {
+//     getFirestore()
 //       .collection("posts")
+//       .doc(post_id)
 //       .get()
-//       querySnapshot
-//       // .then((obj) => dispatch({ type: "REQUESTED_POST_DETAIL", payload: obj }));
+//       .then((obj) => {
+//         const post = obj.data();
+//         const { usersWhoLiked } = post;
+//         if (usersWhoLiked.includes(PostLiker)) {
+//           throw "You can only like post once";
+//         }
+//       })
+//       .then(() => {
+//         getFirestore()
+//           .collection("posts")
+//           .doc(post_id)
+//           .update({ likes: firebase.firestore.FieldValue.increment(1) });
+//       })
+//       .catch((err) => console.log(err));
 //   };
 // };

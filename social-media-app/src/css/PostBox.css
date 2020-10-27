@@ -1,4 +1,4 @@
-.post-box {
+.post-box-textPost {
   display: flex;
   background-color: #242526;
   /* border: 1px solid blue; */
@@ -9,18 +9,30 @@
   margin-bottom: 1.5em;
 }
 
+.post-box__imagePost {
+  display: flex;
+  background-color: #242526;
+  /* border: 1px solid blue; */
+  border-radius: 15px;
+  /* width: 38rem; */
+  width: 100%;
+  height: 20rem;
+  margin-bottom: 1.5em;
+}
+
 .post-box__avatar {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   /* border: 1px solid blanchedalmond; */
   width: 5rem;
+  height: 5rem;
   padding-top: 2%;
 }
 
 .post-box__avatar > img {
   width: 75%;
-  height: 35%;
+  height: 80%;
   border-radius: 50%;
 }
 
@@ -28,8 +40,20 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* border: 1px solid seagreen; */
+  /* border: 2px solid seagreen; */
   width: 85%;
+  height: 100%;
+}
+
+.post-box__imageInput {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  /* border: 1px solid fuchsia; */
+  height: 80%;
+  padding-top: 10px;
 }
 
 .post-box__input {
@@ -39,11 +63,11 @@
   align-items: flex-start;
   width: 100%;
   /* border: 1px solid fuchsia; */
-  height: 6.5rem;
+  height: 60%;
   padding-top: 10px;
 }
 
-.post-box__input > textarea {
+.post-box__textArea {
   border: 1px solid var(--teal);
   color: #f5f6f7;
   border-radius: 10px;
@@ -51,7 +75,10 @@
   padding-left: 1em;
   padding-top: 1em;
   width: 95%;
+  height: 100%;
+  background-color: #3d3e40;
 }
+
 .post-box__input > textarea:focus,
 .post-box__input > textarea:active {
   outline: none;
@@ -61,64 +88,126 @@
 .post-box__input > textarea:focus::placeholder {
   color: transparent;
 }
+
 ::placeholder {
   color: #f5f6f7;
 }
 
-.post-box__input--size {
-  width: 20rem;
-  height: 40rem;
-}
-
-.post-box__input--backgroundColor {
-  background-color: #3d3e40;
-}
-
-.post-box__input--textSize {
-  color: #f5f6f7;
-}
-
-.post-box__input--borderStyle {
-  border: none;
-}
-
-.post-box__charAndButton {
-  /* border: 1px solid salmon; */
-  height: 4rem;
+.image-container {
+  /* border: 1px solid orange; */
   width: 95%;
+  height: 100%;
+}
+
+.post-box__imagePreview {
+  border: 2px solid var(--teal);
+  border-radius: 10px;
+  resize: none;
+  width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-button {
+  /* border: 1px solid pink; */
+  border-radius: 20px;
+  background-color: black;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.15rem;
+  position: absolute;
+  margin-left: 0.5rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+}
+
+.close-button > i {
+  font-size: 1.5rem;
+  color: white;
+  margin-left: 0.25rem;
+}
+
+.post-box__imagePreview > img {
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+.post-box__actionsCharCount {
+  display: flex;
+  justify-content: space-between;
+  /* border: 2px solid salmon; */
+  height: 25%;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.post-box__imageContainer > label {
+  /* border: 1px solid sandybrown; */
+  width: 3.5rem;
+  height: 100%;
+  color: var(--teal);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.post-box__imageContainer > input {
+  display: none;
+}
+
+.post-box__charAndPostContainer {
+  /* border: 1px solid lightgreen; */
+  width: 8rem;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: 1.4rem;
 }
 
 .post-box__charCount {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  /* border: 1px solid yellow; */
+  align-items: center;
+  /* border: 2px solid plum; */
   color: var(--teal);
   font-weight: bold;
-  width: 2rem;
-  height: 3.5rem;
+  width: 3rem;
+  height: 100%;
 }
 
-.button-container {
-  /* border: 1px solid pink; */
-  width: 7rem;
+.post-box__postButtonContainer {
+  /* border: 2px solid orange; */
+  width: 6rem;
   height: 3rem;
   display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
+  justify-content: center;
+  align-items: center;
 }
 
 .post-form__button {
   color: #f5f6f7;
-  width: 6rem;
+  width: 90%;
   height: 2rem;
   border: none;
   background-color: var(--teal);
   border-radius: 25px;
+  cursor: pointer;
 }
+
+.post-box__imageContainer > label:focus,
+.post-box__imageContainer > label:active,
+.post-box__imageContainer > label:hover {
+  color: #0099a1;
+}
+
 .post-form__button:focus,
 .post-form__button:active,
 .post-form__button:hover {
