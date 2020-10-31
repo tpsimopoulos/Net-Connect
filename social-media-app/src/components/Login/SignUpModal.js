@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import history from "../../history";
 import InputField from "./InputField";
 import { signUp } from "../../actions";
-import "../../css/Modal.css";
+import "../../css/signUpModal.css";
 import { connect } from "react-redux";
 // Need to add form validation
 
@@ -50,19 +50,19 @@ class SignUpModal extends React.Component {
     return (
       <div
         style={{ display: this.props.modalOpen ? "block" : "none" }}
-        className="modal"
+        className="signUpModal"
         onClick={() => {
           this.props.handleClickOut();
         }}
       >
-        <div className="modal__content-container">
+        <div className="signUpModal__container">
           <div
             onClick={(e) => e.stopPropagation()}
-            className="modal__content modal__content--background"
+            className="signUpModal__content signUpModal__content--background"
           >
-            <h2 className="modal__signUp">Signup</h2>
+            <h2 className="signUpModal__heading">Signup</h2>
             <form
-              className="modal__form"
+              className="signUpModal__form"
               onSubmit={(e) => this.handleSubmit(e)}
             >
               <InputField
@@ -86,12 +86,12 @@ class SignUpModal extends React.Component {
                 handleChange={(e) => this.handleEmailChange(e)}
                 errorClass={
                   this.props.errorField === "email"
-                    ? "modal__form-email-error"
+                    ? "signUpModal__email-error"
                     : ""
                 }
               />
               {this.props.errorField === "email" ? (
-                <div className="modal__form-error">
+                <div className="signUpModal__form-error">
                   {this.props.errorMessage}
                 </div>
               ) : (
@@ -104,12 +104,12 @@ class SignUpModal extends React.Component {
                 handleChange={(e) => this.handlePasswordChange(e)}
                 errorClass={
                   this.props.errorField === "password"
-                    ? "modal__form-password-error"
+                    ? "signUpModal__password-error"
                     : ""
                 }
               />
               {this.props.errorField === "password" ? (
-                <div className="modal__form-error">
+                <div className="signUpModal__form-error">
                   {this.props.errorMessage}
                 </div>
               ) : (
@@ -117,7 +117,7 @@ class SignUpModal extends React.Component {
               )}
               <button
                 id="submit-button"
-                className="create-acct-button"
+                className="signUpModal__button"
                 type="submit"
               >
                 Create Account

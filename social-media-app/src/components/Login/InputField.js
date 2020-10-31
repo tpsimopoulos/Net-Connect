@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "../../css/Origin.css";
 export default class InputField extends Component {
   render() {
     const {

@@ -1,21 +1,35 @@
 import React, { Component } from "react";
 import "../css/TextPost.css";
 import PostAvatar from "./PostAvatar";
+import Modal from "./Modal";
+import ReplyModal from "./ReplyModal";
 import moment from "moment";
-import { resharePost } from "../actions";
+import { likePost, resharePost } from "../actions";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 // Tie who reshared post to the post id
 class TextPost extends Component {
+  state = {
+    replyModalOpen: false,
+  };
+
+  handleReplyClickOut = () => {
+    this.setState({ replyModalOpen: false });
+  };
+
+  handleReplyClick = (post_id, loggedInUser) => {
+    this.setState({ replyModalOpen: true });
+  };
+
   handleReshare = (post_id, loggedInUser) => {
     const { resharePost, originalPostId } = this.props;
     resharePost(post_id, loggedInUser, originalPostId);
   };
 
-  // handleLike = (id) => {
-  //   const { likePost } = this.props;
-  //   likePost(id);
-  // };
+  handleLike = (post_id, loggedInUser) => {
+    const { likePost } = this.props;
+    likePost(post_id, loggedInUser);
+  };
 
   render() {
     const {
@@ -28,6 +42,9 @@ class TextPost extends Component {
       postReshared,
       postResharer,
       image,
+      loggedInUser,
+      usersWhoLiked,
+      usersWhoReshared,
     } = this.props;
 
     return (
@@ -64,18 +81,38 @@ class TextPost extends Component {
         </Link>
         <div className="test-container">
           <div className="text-post__actions">
-            <i className="reply icon text-post__actions--white"></i>
             <i
-              className="retweet icon text-post__actions--white"
-              onClick={() =>
-                this.handleReshare(post_id, this.props.loggedInUser)
-              }
+              onClick={() => this.handleReplyClick(post_id, loggedInUser)}
+              className="reply icon text-post__actions--white"
+            ></i>
+            {this.state.replyModalOpen ? (
+              <Modal>
+                <ReplyModal
+                  modalOpen={this.state.replyModalOpen}
+                  handleClickOut={this.handleReplyClickOut}
+                />
+              </Modal>
+            ) : (
+              ""
+            )}
+            <i
+              className={`retweet icon ${
+                (postReshared && postResharer === loggedInUser) ||
+                usersWhoReshared.hasOwnProperty(loggedInUser)
+                  ? "button-clicked"
+                  : ""
+              }`}
+              onClick={() => this.handleReshare(post_id, loggedInUser)}
             >
               <span className="text-post__reshareCount">{numOfReshares}</span>
             </i>
             <i
-              className="heart icon text-post__actions--white"
-              // onClick={() => this.handleLike(post_id)}
+              className={`heart icon ${
+                usersWhoLiked.hasOwnProperty(loggedInUser)
+                  ? "button-clicked"
+                  : ""
+              }`}
+              onClick={() => this.handleLike(post_id, loggedInUser)}
             >
               <span className="text-post__likeCount">{numOfLikes}</span>
             </i>
@@ -92,4 +129,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { resharePost })(TextPost);
+export default connect(mapStateToProps, { likePost, resharePost })(TextPost);

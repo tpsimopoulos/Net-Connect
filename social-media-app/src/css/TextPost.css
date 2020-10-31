@@ -142,6 +142,10 @@
   cursor: pointer;
 }
 
+.text-post__actions > .button-clicked {
+  color: red;
+}
+
 .text-post__likeCount,
 .text-post__reshareCount {
   /* border: 1px solid salmon; */
@@ -161,10 +165,6 @@
 @media screen and (min-width: 447px) {
   .text-post__actions {
     margin-right: 14%;
-  }
-
-  .text-post {
-    /* max-width: 35rem; */
   }
 
   .text-post__avatar {

@@ -12,7 +12,6 @@ class PostDetail extends Component {
       const text_post = this.props.posts.filter(
         (post) => post.id === this.props.match.params.post_id
       );
-      console.log(text_post);
       return (
         <React.Fragment>
           <Navbar />

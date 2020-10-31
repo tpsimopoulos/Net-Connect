@@ -1,4 +1,4 @@
-.modal {
+.signUpModal {
   position: fixed;
   z-index: 1;
   left: 0;
@@ -9,7 +9,7 @@
 }
 
 /* Parent Container */
-.modal__content-container {
+.signUpModal__container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -20,27 +20,29 @@
 }
 
 /* Child Container */
-.modal__content {
+.signUpModal__content {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
 
-.modal__content--background {
+.signUpModal__content--background {
   background-color: var(--background-color);
   border: 5px solid var(--teal);
   border-radius: 25px;
+  width: 22rem;
+  height: 30rem;
 }
 
-.modal__signUp {
+.signUpModal__heading {
   color: var(--teal);
   padding-top: 1em;
   /* border: 3px solid green; */
 }
 
 /* Grandchild Container */
-.modal__content > form {
+.signUpModal__form {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -50,11 +52,11 @@
   height: 80%;
 }
 
-.modal__form > .input:nth-of-type(1) {
+.signUpModal__form > .input:nth-of-type(1) {
   margin-top: 0;
 }
 
-.modal__form > input {
+.signUpModal__form > input {
   background-color: var(--secondary-color);
   /* border: 1px solid pink; */
   border: none;
@@ -66,31 +68,31 @@
   color: #bdbec0;
 }
 
-.modal__form > input:focus,
-.modal__form > input:active {
+.signUpModal__form > input:focus,
+.signUpModal__form > input:active {
   outline: none;
   border: 1px solid #bdbec0;
   color: #bdbec0;
 }
 
-.modal__form > input:focus::placeholder {
+.signUpModal__form > input:focus::placeholder {
   color: transparent;
 }
 
-.modal__form-error {
+input.signUpModal__email-error,
+input.signUpModal__form-error {
+  border: 1px solid red;
+  color: red;
+}
+
+.signUpModal__form-error {
   width: 85%;
   text-align: center;
   color: red;
   display: inline-block;
 }
 
-input.modal__form-email-error,
-input.modal__form-password-error {
-  border: 1px solid red;
-  color: red;
-}
-
-.create-acct-button {
+.signUpModal__button {
   margin-top: 1.25em;
   background-color: var(--teal);
   color: white;

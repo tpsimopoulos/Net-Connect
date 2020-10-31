@@ -38,9 +38,6 @@ class PostBox extends Component {
   handleRemoveImagePreviewClick = () => {
     this.setState({ imageUrl: "" });
   };
-  /* NEED ACTION CREATOR TO LINK FILEURL WITH POST */
-
-  /* USER NEEDS TO PREVIEW IMAGE IN TEXT AREA */
 
   handlePostInputChange = (e) => this.setState({ post: e.target.value });
 
@@ -59,10 +56,10 @@ class PostBox extends Component {
         </div>
         <div className="post-box__postForm">
           <form
-            id="post-form"
+            id={this.props.formId ? this.props.formId : "post-form"}
             onSubmit={this.handleSubmit}
             className={
-              this.state.imageUrl ? "post-box__imageInput" : "post-box__input"
+              this.state.imageUrl ? "post-box__imageForm" : "post-box__textForm"
             }
           >
             {this.state.imageUrl ? (
@@ -85,19 +82,33 @@ class PostBox extends Component {
                   this.handleCharCountChange(e);
                 }}
                 type="text"
-                maxLength="200"
-                placeholder="What's happening?"
+                maxLength="180"
+                placeholder={
+                  this.props.placeholder
+                    ? this.props.placeholder
+                    : "What's happening?"
+                }
                 className="post-box__textArea"
               />
             )}
           </form>
           <div className="post-box__actionsCharCount">
             <div className="post-box__imageContainer">
-              <label for="picture-upload">
+              <label
+                for={
+                  this.props.replyPicLabelFor
+                    ? this.props.replyPicLabelFor
+                    : "picture-upload"
+                }
+              >
                 <i className="images outline large icon"></i>
               </label>
               <input
-                id="picture-upload"
+                id={
+                  this.props.replyImageInputId
+                    ? this.props.replyImageInputId
+                    : "picture-upload"
+                }
                 onChange={this.handleFileUpload}
                 type="file"
               />
@@ -107,10 +118,12 @@ class PostBox extends Component {
               <div className="post-box__postButtonContainer">
                 <button
                   type="submit"
-                  form="post-form"
+                  form={
+                    this.props.buttonFor ? this.props.buttonFor : "post-form"
+                  }
                   className="post-form__button"
                 >
-                  Post
+                  {this.props.buttonTitle ? this.props.buttonTitle : "Post"}
                 </button>
               </div>
             </div>

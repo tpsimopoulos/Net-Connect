@@ -57,6 +57,8 @@ class PostFeed extends Component {
                 postResharer={post.postResharer}
                 image={post.image}
                 originalPostId={post.originalPostId}
+                usersWhoLiked={post.usersWhoLiked}
+                usersWhoReshared={post.usersWhoReshared}
               />
             );
           })}

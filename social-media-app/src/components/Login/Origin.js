@@ -1,29 +1,29 @@
 import React from "react";
 import Modal from "../Modal";
 import SignUpModal from "./SignUpModal";
+import PasswordResetModal from "./PasswordResetModal";
 import InputField from "./InputField";
-import firebase from "../../firebase";
 import history from "../../history";
 import { connect } from "react-redux";
-import { signIn } from "../../actions";
+import { signIn, passwordReset } from "../../actions";
 import "../../css/Origin.css";
 
 // implement password reset
 class Origin extends React.Component {
   state = {
-    modalOpen: false,
+    signUpModalOpen: false,
     email: "",
     password: "",
+    passwordResetModalOpen: false,
   };
 
-  componentDidMount() {}
-
   handleSignUpClick = () => {
-    this.setState({ modalOpen: true });
+    this.setState({ signUpModalOpen: true });
   };
 
   handleClickOut = () => {
-    this.setState({ modalOpen: false });
+    this.setState({ signUpModalOpen: false });
+    this.setState({ passwordResetModalOpen: false });
   };
 
   handleEmailChange = (e) => {
@@ -32,6 +32,10 @@ class Origin extends React.Component {
 
   handlePasswordChange = (e) => {
     this.setState({ password: e.target.value });
+  };
+
+  handleForgotPasswordClick = () => {
+    this.setState({ passwordResetModalOpen: true });
   };
 
   handleSubmit = (e) => {
@@ -57,15 +61,18 @@ class Origin extends React.Component {
           <h2 className="login-page__header login-page__header--color">
             Login
           </h2>
-          <div className="login_page__input-fields">
+          <div className="login-page__inputFields">
             <InputField
               placeholder="Email"
               icon="user icon"
               stateValue={this.state.email}
               handleChange={(e) => this.handleEmailChange(e)}
+              inputClassName="login-page__emailInput"
             />
-            {this.props.errorField === "password" ? (
-              <div className="modal__form-error">{this.props.errorMessage}</div>
+            {this.props.errorField === "email" ? (
+              <div className="login-page__emailInput--error">
+                {this.props.errorMessage}
+              </div>
             ) : (
               ""
             )}
@@ -75,26 +82,45 @@ class Origin extends React.Component {
               icon="lock icon"
               stateValue={this.state.password}
               handleChange={(e) => this.handlePasswordChange(e)}
+              inputClassName="login-page__passwordInput"
             />
             {this.props.errorField === "password" ? (
-              <div className="modal__form-error">{this.props.errorMessage}</div>
+              <div className="login-page__passwordInput--error">
+                {this.props.errorMessage}
+              </div>
             ) : (
               ""
             )}
-            <button type="submit" className="login_page__login-button">
+            <a
+              onClick={() => this.handleForgotPasswordClick()}
+              className="login-page__forgotPassword"
+            >
+              Forgot your password?
+            </a>
+            {this.state.passwordResetModalOpen ? (
+              <Modal>
+                <PasswordResetModal
+                  modalOpen={this.state.passwordResetModalOpen}
+                  handleClickOut={this.handleClickOut}
+                />
+              </Modal>
+            ) : (
+              ""
+            )}
+            <button type="submit" className="login-page__loginButton">
               Login
             </button>
             <button
               type="button"
               onClick={() => this.handleSignUpClick()}
-              className="login_page__sign-up-button"
+              className="login-page__signUpButton"
             >
               Sign Up
             </button>
-            {this.state.modalOpen ? (
+            {this.state.signUpModalOpen ? (
               <Modal>
                 <SignUpModal
-                  modalOpen={this.state.modalOpen}
+                  modalOpen={this.state.signUpModalOpen}
                   handleClickOut={this.handleClickOut}
                 />
               </Modal>

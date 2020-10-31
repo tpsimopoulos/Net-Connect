@@ -23,44 +23,78 @@
   color: var(--teal);
 }
 
-.login_page__input-fields {
+.login-page__inputFields {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  /* border: 5px solid var(--teal);
-  border-radius: 5px; */
+  /* border: 5px solid var(--teal); */
+  border-radius: 5px;
   width: 75%;
   height: 75%;
   padding-top: 1em;
 }
 
-.login_page__input-fields input:nth-of-type(1) {
+.login-page__inputFields input:nth-of-type(1) {
   margin-bottom: 0.5em;
 }
-.login_page__input-fields input {
+.login-page__inputFields input {
   background-color: var(--secondary-color);
-  /* border: 1px solid pink; */
   border: none;
   width: 85%;
   height: 3em;
   padding: 1em;
-  margin-bottom: 1em;
+  /* margin-bottom: 1em; */
   border-radius: 10px;
   color: #bdbec0;
 }
 
-.login_page__input-fields input:focus,
-.login_page__input-fields input:active {
+.login-page__inputFields input:focus,
+.login-page__inputFields input:active {
   outline: none;
   border: 1px solid #bdbec0;
 }
 
-.login_page__input-fields input:focus::placeholder {
+.login-page__inputFields input:focus::placeholder {
   color: transparent;
 }
 
-.login_page__login-button {
+input.login-page__passwordInput,
+input.login-page__emailInput {
+  border: 1px solid red;
+  color: red;
+}
+
+.login-page__emailInput--error,
+.login-page__passwordInput--error {
+  width: 85%;
+  text-align: center;
+  color: red;
+  display: inline-block;
+}
+
+.login-page__forgotPassword {
+  display: flex;
+  justify-content: flex-end;
+  color: lightslategrey;
+  font-size: 0.65rem;
+  /* border: 1px solid pink; */
+  width: 84%;
+  cursor: pointer;
+}
+
+.login-page__forgotPassword:hover {
+  text-decoration: none;
+  color: none;
+}
+
+.login-page__forgotPassword:link,
+.login-page__forgotPassword:hover,
+.login-page__forgotPassword:active {
+  color: var(--teal);
+}
+
+.login-page__loginButton {
   margin-top: 1em;
   width: 85%;
   height: 2em;
@@ -72,7 +106,7 @@
   color: white;
 }
 
-.login_page__sign-up-button {
+.login-page__signUpButton {
   margin-top: 0.25em;
   width: 85%;
   height: 2em;
@@ -99,14 +133,6 @@
   background-color: #ebebeb;
   border: 3px solid var(--teal);
 }
-
-/* .login_page__input-fields .negative {
-  border: 1px solid red;
-  display: inline-block;
-  width: 75%;
-  height: 25%;
-  overflow: auto; */
-/* } */
 
 @media screen and (min-width: 100px) and (max-width: 449px) {
   .login-page__form {
