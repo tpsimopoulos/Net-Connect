@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 class TextPost extends Component {
   state = {
     replyModalOpen: false,
+    likeClicked: false,
   };
 
   handleReplyClickOut = () => {
@@ -22,12 +23,12 @@ class TextPost extends Component {
   };
 
   handleReshare = (post_id, loggedInUser) => {
-    const { resharePost, originalPostId } = this.props;
-    resharePost(post_id, loggedInUser, originalPostId);
+    const { resharePost, resharedPostId } = this.props;
+    resharePost(post_id, loggedInUser, resharedPostId);
   };
 
   handleLike = (post_id, loggedInUser) => {
-    const { likePost } = this.props;
+    const { likePost, resharedPostId } = this.props;
     likePost(post_id, loggedInUser);
   };
 
@@ -39,12 +40,13 @@ class TextPost extends Component {
       post_id,
       numOfLikes,
       numOfReshares,
-      postReshared,
+      resharedPost,
       postResharer,
       image,
       loggedInUser,
       usersWhoLiked,
       usersWhoReshared,
+      postLikers,
     } = this.props;
 
     return (
@@ -55,7 +57,7 @@ class TextPost extends Component {
               <PostAvatar />
             </div>
             <div className="text-post__bodyContent">
-              {postReshared ? (
+              {resharedPost ? (
                 <div className="text-post__Reshare">
                   <i className="retweet icon"></i>
                   {postResharer} Reshared
@@ -97,7 +99,7 @@ class TextPost extends Component {
             )}
             <i
               className={`retweet icon ${
-                (postReshared && postResharer === loggedInUser) ||
+                (resharedPost && postResharer === loggedInUser) ||
                 usersWhoReshared.hasOwnProperty(loggedInUser)
                   ? "button-clicked"
                   : ""
@@ -108,11 +110,14 @@ class TextPost extends Component {
             </i>
             <i
               className={`heart icon ${
+                postLikers.includes(loggedInUser) ||
                 usersWhoLiked.hasOwnProperty(loggedInUser)
                   ? "button-clicked"
                   : ""
               }`}
-              onClick={() => this.handleLike(post_id, loggedInUser)}
+              onClick={() => {
+                this.handleLike(post_id, loggedInUser);
+              }}
             >
               <span className="text-post__likeCount">{numOfLikes}</span>
             </i>

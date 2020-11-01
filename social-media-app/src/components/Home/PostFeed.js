@@ -11,7 +11,7 @@ class PostFeed extends Component {
     let latestPost = 0;
     const firebasePosts = [...postArray];
     for (let i = 0; i < firebasePosts.length; i++) {
-      if (firebasePosts[i].postReshared) {
+      if (firebasePosts[i].resharedPost) {
         let maxDate = Math.max(
           firebasePosts[i].reshareDate.seconds,
           firebasePosts[i].createdAt.seconds
@@ -53,12 +53,13 @@ class PostFeed extends Component {
                 post_id={post.id}
                 numOfLikes={post.likes}
                 numOfReshares={post.reshares}
-                postReshared={post.postReshared}
+                resharedPost={post.resharedPost}
                 postResharer={post.postResharer}
                 image={post.image}
-                originalPostId={post.originalPostId}
+                resharedPostId={post.resharedPostId}
                 usersWhoLiked={post.usersWhoLiked}
                 usersWhoReshared={post.usersWhoReshared}
+                postLikers={post.postLikers}
               />
             );
           })}

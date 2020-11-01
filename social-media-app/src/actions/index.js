@@ -4,19 +4,22 @@ import _ from "lodash";
 
 export const addPost = (post) => {
   return (dispatch, getState, { getFirestore }) => {
+    // adding a new post to posts collection
     getFirestore()
       .collection("posts")
       .add({
         ...post,
         createdAt: new Date(),
         likes: 0,
+        postLikers: [],
         replies: 0,
-        postReshared: false,
+        resharedPost: false,
         reshares: 0,
         usersWhoReshared: [],
         usersWhoLiked: [],
       })
       .then((docRef) => {
+        // adding post id to authoredPosts property of loggedInUsers profile
         getFirestore()
           .collection("users")
           .where("username", "==", post.postAuthor)
@@ -32,6 +35,24 @@ export const addPost = (post) => {
                   ),
                 });
             });
+          });
+        return docRef;
+      })
+      .then((docRef) => {
+        // updating that post to have a reference id "originId" whose id points to the original post
+        getFirestore()
+          .collection("posts")
+          .doc(docRef.id)
+          .get()
+          .then((obj) => {
+            const post = obj.data();
+            getFirestore()
+              .collection("posts")
+              .doc(docRef.id)
+              .set({
+                ...post,
+                originId: docRef.id,
+              });
           });
       })
       .catch((err) => console.log(err));
@@ -105,8 +126,234 @@ export const resetPassword = (email) => {
   };
 };
 
-export const resharePost = (post_id, loggedInUser, originalPostId) => {
+export const resharePost = (post_id, loggedInUser) => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
+    getFirestore()
+      .collection("posts")
+      .doc(post_id)
+      .get()
+      .then((obj) => {
+        const clickedPost = obj.data();
+        const {
+          usersWhoReshared,
+          resharedPost,
+          postAuthor,
+          postResharer,
+          originId,
+        } = clickedPost;
+
+        // if loggedInUser is clicking the reshare button on their reshared post
+        if (resharedPost && postResharer === loggedInUser) {
+          console.log(
+            "loggedInUser clicked reshare button on their reshared post"
+          );
+          // delete the reshared post
+          getFirestore()
+            .collection("posts")
+            .doc(post_id)
+            .delete()
+            .then(() => {
+              // decrement original post reshares by 1 and remove loggedInUser from usersWhoReshared object
+              getFirestore()
+                .collection("posts")
+                .where("originId", "==", originId)
+                .get()
+                .then((querySnapshot) => {
+                  querySnapshot.forEach((post) => {
+                    getFirestore()
+                      .collection("posts")
+                      .doc(post.id)
+                      .update({
+                        reshares: firebase.firestore.FieldValue.increment(-1),
+                      });
+                  });
+                })
+                .then(() => {
+                  getFirestore()
+                    .collection("posts")
+                    .doc(originId)
+                    .update({
+                      usersWhoReshared: _.omit(usersWhoReshared, [
+                        loggedInUser,
+                      ]),
+                    });
+                });
+            });
+        } else if (resharedPost && postResharer !== loggedInUser) {
+          console.log(
+            "loggedInUser clicked reshare button on a reshared post they haven't reshared"
+          );
+          // loggedInUser trying to reshare a reshared post they haven't reshared
+          getFirestore()
+            .collection("posts")
+            .doc(post_id)
+            .get()
+            .then((obj) => {
+              // creating a reshared post under loggedInUsers' name with the updated original post info
+              const post = obj.data();
+              getFirestore()
+                .collection("posts")
+                .add({
+                  ...post,
+                  postResharer: loggedInUser,
+                  resharedPost: true,
+                  reshareDate: new Date(),
+                })
+                .then(() => {
+                  getFirestore()
+                    .collection("posts")
+                    .where("originId", "==", post.originId)
+                    .get()
+                    .then((querySnapshot) => {
+                      querySnapshot.forEach((post) => {
+                        getFirestore()
+                          .collection("posts")
+                          .doc(post.id)
+                          .update({
+                            reshares: firebase.firestore.FieldValue.increment(
+                              1
+                            ),
+                          });
+                      });
+                    });
+                });
+            });
+        } else if (
+          !resharedPost &&
+          usersWhoReshared.hasOwnProperty(loggedInUser)
+        ) {
+          console.log(
+            "logginInUser clicked reshare button on an original post that they reshared"
+          );
+          // logginInUser is clicked reshare button on original post that they reshared
+          getFirestore()
+            .collection("posts")
+            .where("originId", "==", originId)
+            .get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((post) => {
+                getFirestore()
+                  .collection("posts")
+                  .doc(post.id)
+                  .update({
+                    reshares: firebase.firestore.FieldValue.increment(-1),
+                  });
+              });
+            })
+            .then(() => {
+              getFirestore()
+                .collection("posts")
+                .doc(originId)
+                .get()
+                .then((obj) => {
+                  const { usersWhoReshared } = obj.data();
+                  const resharedPost = usersWhoReshared[loggedInUser];
+                  getFirestore().collection("posts").doc(resharedPost).delete();
+                })
+                .then(() => {
+                  getFirestore()
+                    .collection("posts")
+                    .doc(originId)
+                    .update({
+                      usersWhoReshared: _.omit(usersWhoReshared, [
+                        loggedInUser,
+                      ]),
+                    });
+                })
+                .catch((err) => console.log(err));
+            });
+        }
+        // if loggedInUser clicks on original post and they haven't reshared it
+        else if (
+          !resharedPost &&
+          !usersWhoReshared.hasOwnProperty(loggedInUser)
+        ) {
+          console.log(
+            "loggedInUser clicked reshare button on an original post they haven't reshared"
+          );
+          // increment reshares on original post by 1
+          // retrieve that updated post
+          getFirestore()
+            .collection("posts")
+            .doc(post_id)
+            .get()
+            .then((obj) => {
+              // creating a reshared post under that user's name with the updated original post info
+              const post = obj.data();
+              getFirestore()
+                .collection("posts")
+                .add({
+                  ...post,
+                  postResharer: loggedInUser,
+                  resharedPost: true,
+                  reshareDate: new Date(),
+                })
+                // get reference to this reshared post and append to user's resharedPosts in profile
+                .then((docRef) => {
+                  getFirestore()
+                    .collection("users")
+                    .where("username", "==", post.postAuthor)
+                    .get()
+                    .then((querySnapshot) => {
+                      querySnapshot.forEach((user) => {
+                        getFirestore()
+                          .collection("users")
+                          .doc(user.id)
+                          .update({
+                            resharedPosts: firebase.firestore.FieldValue.arrayUnion(
+                              docRef.id
+                            ),
+                          });
+                      });
+                      return docRef;
+                    })
+                    .then(() => {
+                      getFirestore()
+                        .collection("posts")
+                        .doc(originId)
+                        .get()
+                        .then((obj) => {
+                          // since post has now been reshared, append the reshared post id to user in usersWhoReshared array in original post
+                          const post = obj.data();
+                          getFirestore()
+                            .collection("posts")
+                            .doc(originId)
+                            .update({
+                              usersWhoReshared: {
+                                ...post.usersWhoReshared,
+                                [loggedInUser]: docRef.id,
+                              },
+                            })
+                            .then(() => {
+                              getFirestore()
+                                .collection("posts")
+                                .where("originId", "==", originId)
+                                .get()
+                                .then((querySnapshot) => {
+                                  querySnapshot.forEach((post) => {
+                                    getFirestore()
+                                      .collection("posts")
+                                      .doc(post.id)
+                                      .update({
+                                        reshares: firebase.firestore.FieldValue.increment(
+                                          1
+                                        ),
+                                      });
+                                  });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        }
+      });
+  };
+};
+
+export const likePost = (post_id, loggedInUser) => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    // retrieving the post the user clicked like button on
     getFirestore()
       .collection("posts")
       .doc(post_id)
@@ -114,223 +361,309 @@ export const resharePost = (post_id, loggedInUser, originalPostId) => {
       .then((obj) => {
         const post = obj.data();
         const {
-          usersWhoReshared,
-          postReshared,
-          postAuthor,
+          resharedPost,
           postResharer,
+          usersWhoLiked,
+          usersWhoReshared,
+          likes,
+          postLikers,
+          resharedPostId,
+          originId,
         } = post;
-        // if post reshared and post resharer is logged in, delete reshare and decrement original post reshares
-        if (postReshared && postResharer === loggedInUser) {
-          console.log("FIRST IF");
-          getFirestore()
-            .collection("posts")
-            .doc(post_id)
-            .delete()
-            .then(() => {
-              getFirestore()
-                .collection("posts")
-                .doc(originalPostId)
-                .update({
-                  reshares: firebase.firestore.FieldValue.increment(-1),
-                  usersWhoReshared: firebase.firestore.FieldValue.arrayRemove(
-                    loggedInUser
-                  ),
-                });
-            });
-          // else if post wasn't reshared and logged in user not in usersWhoReshared,
-          // user is trying to reshare a post never reshared by them before
-        } else if (
-          !postReshared &&
-          !post.usersWhoReshared.hasOwnProperty(loggedInUser)
+        // if loggedInUser clicked like button on an original post they liked but DIDN'T reshare
+        if (
+          !resharedPost &&
+          usersWhoLiked.hasOwnProperty(loggedInUser) &&
+          !usersWhoReshared.hasOwnProperty(loggedInUser)
         ) {
-          console.log("SECOND IF");
-          // increment reshares on original post by 1
+          console.log(
+            "loggedInUser clicked like button on an original post they liked but DIDN'T reshare"
+          );
+          // decrement liked post by 1 and remove loggedInUser from usersWhoLiked
           getFirestore()
             .collection("posts")
             .doc(post_id)
             .update({
-              reshares: firebase.firestore.FieldValue.increment(1),
+              likes:
+                likes > 0 ? firebase.firestore.FieldValue.increment(-1) : 0,
+              usersWhoLiked: _.omit(usersWhoLiked, [loggedInUser]),
             })
             .then(() => {
-              // retrieve that updated post
+              // removing liked post from likedPosts array property on user's profile
               getFirestore()
-                .collection("posts")
-                .doc(post_id)
+                .collection("users")
+                .where("username", "==", loggedInUser)
                 .get()
-                .then((obj) => {
-                  // creating a reshared post under that user's name with the updated original post info
-                  const post = obj.data();
-                  getFirestore()
-                    .collection("posts")
-                    .add({
-                      ...post,
-                      originalPostId: post_id,
-                      postResharer: loggedInUser,
-                      postReshared: true,
-                      reshareDate: new Date(),
-                    })
-                    // get reference to this new post and append to user's resharedPosts in profile
-                    .then((docRef) => {
-                      getFirestore()
-                        .collection("users")
-                        .where("username", "==", post.postAuthor)
-                        .get()
-                        .then((querySnapshot) => {
-                          querySnapshot.forEach((user) => {
-                            getFirestore()
-                              .collection("users")
-                              .doc(user.id)
-                              .update({
-                                resharedPosts: firebase.firestore.FieldValue.arrayUnion(
-                                  docRef.id
-                                ),
-                              });
-                          });
-                          return docRef;
-                        })
-                        .then((docRef) => {
-                          getFirestore()
-                            .collection("posts")
-                            .doc(post_id)
-                            .get()
-                            .then((obj) => {
-                              // since post has now been reshared, append the reshared post id to user in usersWhoReshared array in original post
-                              const post = obj.data();
-                              getFirestore()
-                                .collection("posts")
-                                .doc(post_id)
-                                .set({
-                                  ...post,
-                                  usersWhoReshared: {
-                                    ...post.usersWhoReshared,
-                                    [loggedInUser]: docRef.id,
-                                  },
-                                });
-                            });
-                        });
-                    });
+                .then((querySnapshot) => {
+                  querySnapshot.forEach((user) => {
+                    getFirestore()
+                      .collection("users")
+                      .doc(user.id)
+                      .update({
+                        likedPosts: firebase.firestore.FieldValue.arrayRemove(
+                          post_id
+                        ),
+                      });
+                  });
                 });
             });
-          // if user clicks on original post and they are in the usersWhoReshared array...
-        } else if (
-          !postReshared &&
+        }
+        // if loggedInUser clicked like button on an original post they liked AND reshared
+        else if (
+          !resharedPost &&
+          usersWhoLiked.hasOwnProperty(loggedInUser) &&
           usersWhoReshared.hasOwnProperty(loggedInUser)
         ) {
-          console.log("THIRD IF");
-          getFirestore()
-            .collection("posts")
-            .doc(post_id)
-            .get()
-            .then((obj) => {
-              const { usersWhoReshared } = obj.data();
-              // find the reshared post id in original post's usersWhoReshared object
-              for (const user in usersWhoReshared) {
-                if (user === loggedInUser) {
-                  const resharedPost = usersWhoReshared[user];
-                  // delete that reshared post
-                  getFirestore()
-                    .collection("posts")
-                    .doc(resharedPost)
-                    .delete()
-                    .then(() => {
-                      getFirestore()
-                        .collection("posts")
-                        .doc(post_id)
-                        .get()
-                        .then((obj) => {
-                          const { usersWhoReshared } = obj.data();
-                          // then remove the user from usersWhoReshared object
-                          getFirestore()
-                            .collection("posts")
-                            .doc(post_id)
-                            .update({
-                              usersWhoReshared: _.omit(usersWhoReshared, [
-                                loggedInUser,
-                              ]),
-                              reshares: firebase.firestore.FieldValue.increment(
-                                -1
-                              ),
-                            });
-                        });
-                    });
-                }
-              }
-            })
-            .catch((err) => console.log(err));
-        }
-      });
-  };
-};
-
-// NEED TO ADD AN ID REFERENCE TO RESHARED POST IN THE ORIGINAL POST EVERY TIME YOU APPEND TO USERSWHORESHARED
-
-export const likePost = (post_id, loggedInUser) => {
-  return (dispatch, getState, { getFirebase, getFirestore }) => {
-    getFirestore()
-      .collection("posts")
-      .doc(post_id)
-      .get()
-      .then((obj) => {
-        const post = obj.data();
-        const { usersWhoLiked } = post;
-        // if user already liked post, decrement likes by 1 and remove user from usersWhoLiked
-        if (usersWhoLiked.hasOwnProperty(loggedInUser)) {
+          console.log(
+            "loggedInUser clicked like button on an original post they liked AND reshared"
+          );
+          // decrement original post likes by 1 and remove user from usersWhoLiked object
           getFirestore()
             .collection("posts")
             .doc(post_id)
             .update({
-              likes: firebase.firestore.FieldValue.increment(-1),
               usersWhoLiked: _.omit(usersWhoLiked, [loggedInUser]),
-            });
-        } else {
-          // Else if they are liking the post for the first time, increment post likes by 1
-          getFirestore()
-            .collection("posts")
-            .doc(post_id)
-            .update({
-              likes: firebase.firestore.FieldValue.increment(1),
             })
             .then(() => {
-              // get that post and add the logged in user to the usersWhoLiked object
+              // decrement all posts whose origin is originId
               getFirestore()
                 .collection("posts")
-                .doc(post_id)
+                .where("originId", "==", originId)
                 .get()
-                .then((obj) => {
-                  const post = obj.data();
+                .then((querySnapshot) => {
+                  querySnapshot.forEach((post) => {
+                    getFirestore()
+                      .collection("posts")
+                      .doc(post.id)
+                      .update({
+                        likes:
+                          likes > 0
+                            ? firebase.firestore.FieldValue.increment(-1)
+                            : 0,
+                        postLikers: firebase.firestore.FieldValue.arrayRemove(
+                          loggedInUser
+                        ),
+                      });
+                  });
+                })
+                .then(() => {
+                  // removing liked post from likedPosts array property on user's profile
+                  getFirestore()
+                    .collection("users")
+                    .where("username", "==", loggedInUser)
+                    .get()
+                    .then((querySnapshot) => {
+                      querySnapshot.forEach((user) => {
+                        getFirestore()
+                          .collection("users")
+                          .doc(user.id)
+                          .update({
+                            likedPosts: firebase.firestore.FieldValue.arrayRemove(
+                              post_id
+                            ),
+                          });
+                      });
+                    });
+                });
+            });
+        }
+        // if loggedInUser clicked like button on a reshared post and they are the postResharer
+        else if (resharedPost && postResharer === loggedInUser) {
+          console.log(
+            "loggedInUser clicked like button on a reshared post and they are the postResharer"
+          );
+          getFirestore()
+            .collection("posts")
+            .doc(originId)
+            .get()
+            .then((obj) => {
+              const { usersWhoLiked } = obj.data();
+              // if loggedInUser has liked the reshared post, decrement all posts of same originId by 1...
+              if (usersWhoLiked[loggedInUser]) {
+                getFirestore()
+                  .collection("posts")
+                  .where("originId", "==", originId)
+                  .get()
+                  .then((querySnapshot) => {
+                    querySnapshot.forEach((post) => {
+                      getFirestore()
+                        .collection("posts")
+                        .doc(post.id)
+                        .update({
+                          likes: firebase.firestore.FieldValue.increment(-1),
+                          postLikers: firebase.firestore.FieldValue.arrayRemove(
+                            loggedInUser
+                          ),
+                        });
+                    });
+                  })
+                  .then(() => {
+                    // remove loggedInUser from the usersWhoLiked object in the original post
+                    getFirestore()
+                      .collection("posts")
+                      .doc(originId)
+                      .update({
+                        usersWhoLiked: _.omit(usersWhoLiked, [loggedInUser]),
+                      });
+                  });
+              } else if (!usersWhoLiked[loggedInUser]) {
+                // if loggedInUser has not liked the reshared post, increment all posts of same originId by 1......
+                getFirestore()
+                  .collection("posts")
+                  .where("originId", "==", originId)
+                  .get()
+                  .then((querySnapshot) => {
+                    querySnapshot.forEach((post) => {
+                      getFirestore()
+                        .collection("posts")
+                        .doc(post.id)
+                        .update({
+                          likes: firebase.firestore.FieldValue.increment(1),
+                          postLikers: firebase.firestore.FieldValue.arrayUnion(
+                            loggedInUser
+                          ),
+                        });
+                    });
+                  })
+                  .then(() => {
+                    getFirestore()
+                      .collection("posts")
+                      .doc(originId)
+                      .update({
+                        usersWhoLiked: {
+                          ...usersWhoLiked,
+                          [loggedInUser]: post_id,
+                        },
+                      });
+                  });
+              }
+            });
+        }
+        // if loggedInUser clicked like button on a reshared post and they are NOT postResharer
+        else if (resharedPost && postResharer !== loggedInUser) {
+          if (postLikers.includes(loggedInUser)) {
+            getFirestore()
+              .collection("posts")
+              .where("originId", "==", originId)
+              .get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach((post) => {
                   getFirestore()
                     .collection("posts")
-                    .doc(post_id)
-                    .set({
-                      ...post,
-                      usersWhoLiked: {
-                        ...post.usersWhoLiked,
-                        [loggedInUser]: post_id,
-                      },
+                    .doc(post.id)
+                    .update({
+                      likes: firebase.firestore.FieldValue.increment(-1),
+                      postLikers: firebase.firestore.FieldValue.arrayRemove(
+                        loggedInUser
+                      ),
                     });
-                  // .then((docRef) => {
-                  //   getFirestore()
-                  //     .collection("users")
-                  //     .where("username", "==", post.postAuthor)
-                  //     .get()
-                  //     .then((querySnapshot) => {
-                  //       querySnapshot.forEach((user) => {
-                  //         getFirestore()
-                  //           .collection("users")
-                  //           .doc(user.id)
-                  //           .update({
-                  //             likedPosts: firebase.firestore.FieldValue.arrayUnion(
-                  //               docRef.id
-                  //             ),
-                  //           });
-                  //       });
-                  //       return docRef;
-                  //     });
-                  // });
                 });
-            })
-            .catch((err) => console.log(err));
+              })
+              .then(() => {
+                getFirestore()
+                  .collection("posts")
+                  .doc(originId)
+                  .update({
+                    usersWhoLiked: _.omit(usersWhoLiked, loggedInUser),
+                  });
+              });
+          } else if (!postLikers.includes(loggedInUser)) {
+            getFirestore()
+              .collection("posts")
+              .where("originId", "==", originId)
+              .get()
+              .then((querySnapshot) => {
+                querySnapshot.forEach((post) => {
+                  getFirestore()
+                    .collection("posts")
+                    .doc(post.id)
+                    .update({
+                      likes: firebase.firestore.FieldValue.increment(1),
+                      postLikers: firebase.firestore.FieldValue.arrayUnion(
+                        loggedInUser
+                      ),
+                    });
+                });
+              })
+              .then(() => {
+                getFirestore()
+                  .collection("posts")
+                  .doc(originId)
+                  .update({
+                    usersWhoLiked: {
+                      ...usersWhoLiked,
+                      [loggedInUser]: post_id,
+                    },
+                  });
+              });
+          }
         }
-      });
+        // if loggedInUser clicked like button on an original post they don't currently like BUT reshared
+        else if (
+          !resharedPost &&
+          !usersWhoLiked.hasOwnProperty(loggedInUser) &&
+          usersWhoReshared.hasOwnProperty(loggedInUser)
+        ) {
+          console.log(
+            "loggedInUser clicked like button on an original post they don't currently like BUT reshared"
+          );
+          getFirestore()
+            .collection("posts")
+            .doc(originId)
+            .get()
+            .then((obj) => {
+              const { usersWhoLiked } = obj.data();
+              // increment likes by 1 and add loggedInUser to usersWhoLiked object
+              getFirestore()
+                .collection("posts")
+                .doc(originId)
+                .update({
+                  usersWhoLiked: {
+                    ...usersWhoLiked,
+                    [loggedInUser]: post_id,
+                  },
+                })
+                .then(() => {
+                  // add the liked post id to the loggedInUser's profile property of likedPosts
+                  getFirestore()
+                    .collection("users")
+                    .where("username", "==", loggedInUser)
+                    .get()
+                    .then((querySnapshot) => {
+                      querySnapshot.forEach((user) => {
+                        getFirestore()
+                          .collection("users")
+                          .doc(user.id)
+                          .update({
+                            likedPosts: firebase.firestore.FieldValue.arrayUnion(
+                              post_id
+                            ),
+                          });
+                      });
+                    });
+                })
+                .then(() => {
+                  getFirestore()
+                    .collection("posts")
+                    .where("originId", "==", originId)
+                    .get()
+                    .then((querySnapshot) => {
+                      querySnapshot.forEach((post) => {
+                        getFirestore()
+                          .collection("posts")
+                          .doc(post.id)
+                          .update({
+                            likes: firebase.firestore.FieldValue.increment(1),
+                            postLikers: firebase.firestore.FieldValue.arrayUnion(
+                              loggedInUser
+                            ),
+                          });
+                      });
+                    });
+                });
+            });
+        }
+      })
+      .catch((err) => console.log(err));
   };
 };
