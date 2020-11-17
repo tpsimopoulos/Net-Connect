@@ -1,42 +1,54 @@
 import React, { Component } from "react";
-import PostBoxAvatar from "./PostBoxAvatar";
-import { addPost } from "../../actions";
+import Avatar from "../Avatar";
 import { connect } from "react-redux";
-import firebase from "../../firebase";
+import {
+  addPost,
+  uploadImage,
+  removeImageFromPostBoxPreview,
+} from "../../actions";
 import "../../css/PostBox.css";
-import { storage } from "firebase";
 
 class PostBox extends Component {
   state = {
-    username: this.props.username,
     post: "",
     charCount: 180,
-    imageUrl: "",
   };
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.addPost({
-      image: this.state.imageUrl,
-      postAuthor: this.state.username,
-      post: this.state.post,
-    });
+    const {
+      postboxImage,
+      addPost,
+      removeImageFromPostBoxPreview,
+      username,
+    } = this.props;
+    if (postboxImage) {
+      addPost({
+        image: postboxImage,
+        postAuthor: username,
+        post: this.state.post,
+      });
+    } else {
+      addPost({
+        postAuthor: username,
+        post: this.state.post,
+      });
+    }
     this.setState({ post: "" });
     this.setState({ charCount: 180 });
     this.setState({ imageUrl: "" });
+    removeImageFromPostBoxPreview();
   };
 
-  handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    const storageRef = firebase.storage().ref();
-    const fileRef = storageRef.child(file.name);
-    await fileRef.put(file);
-    const fileUrl = await fileRef.getDownloadURL();
-    this.setState({ imageUrl: fileUrl });
+  handleUploadedImage = async (e) => {
+    console.log("uploaded image for preview");
+    const { uploadImage } = this.props;
+    await uploadImage(e, "POSTBOX");
   };
 
   handleRemoveImagePreviewClick = () => {
-    this.setState({ imageUrl: "" });
+    const { removeImageFromPostBoxPreview } = this.props;
+    removeImageFromPostBoxPreview();
   };
 
   handlePostInputChange = (e) => this.setState({ post: e.target.value });
@@ -45,24 +57,32 @@ class PostBox extends Component {
     this.setState({ charCount: 180 - e.target.value.length });
 
   render() {
+    const {
+      postboxImage,
+      formId,
+      placeholder,
+      replyPicLabelFor,
+      replyImageInputId,
+      buttonFor,
+      buttonTitle,
+    } = this.props;
+
     return (
       <div
-        className={
-          this.state.imageUrl ? "post-box__imagePost" : "post-box-textPost"
-        }
+        className={postboxImage ? "post-box__imagePost" : "post-box-textPost"}
       >
         <div className="post-box__avatar">
-          <PostBoxAvatar />
+          <Avatar />
         </div>
         <div className="post-box__postForm">
           <form
-            id={this.props.formId ? this.props.formId : "post-form"}
+            id={formId ? formId : "post-form"}
             onSubmit={this.handleSubmit}
             className={
-              this.state.imageUrl ? "post-box__imageForm" : "post-box__textForm"
+              postboxImage ? "post-box__imageForm" : "post-box__textForm"
             }
           >
-            {this.state.imageUrl ? (
+            {postboxImage ? (
               <div className="image-container">
                 <div
                   className="close-button"
@@ -71,7 +91,7 @@ class PostBox extends Component {
                   <i className="close icon"></i>
                 </div>
                 <div contentEditable="true" className="post-box__imagePreview">
-                  <img src={this.state.imageUrl} />
+                  <img src={postboxImage} />
                 </div>
               </div>
             ) : (
@@ -83,11 +103,7 @@ class PostBox extends Component {
                 }}
                 type="text"
                 maxLength="180"
-                placeholder={
-                  this.props.placeholder
-                    ? this.props.placeholder
-                    : "What's happening?"
-                }
+                placeholder={placeholder ? placeholder : "What's happening?"}
                 className="post-box__textArea"
               />
             )}
@@ -95,21 +111,14 @@ class PostBox extends Component {
           <div className="post-box__actionsCharCount">
             <div className="post-box__imageContainer">
               <label
-                for={
-                  this.props.replyPicLabelFor
-                    ? this.props.replyPicLabelFor
-                    : "picture-upload"
-                }
+                for={replyPicLabelFor ? replyPicLabelFor : "picture-upload"}
               >
                 <i className="images outline large icon"></i>
               </label>
               <input
-                id={
-                  this.props.replyImageInputId
-                    ? this.props.replyImageInputId
-                    : "picture-upload"
-                }
-                onChange={this.handleFileUpload}
+                id={replyImageInputId ? replyImageInputId : "picture-upload"}
+                onChange={this.handleUploadedImage}
+                onClick={(e) => (e.target.value = null)}
                 type="file"
               />
             </div>
@@ -118,12 +127,10 @@ class PostBox extends Component {
               <div className="post-box__postButtonContainer">
                 <button
                   type="submit"
-                  form={
-                    this.props.buttonFor ? this.props.buttonFor : "post-form"
-                  }
+                  form={buttonFor ? buttonFor : "post-form"}
                   className="post-form__button"
                 >
-                  {this.props.buttonTitle ? this.props.buttonTitle : "Post"}
+                  {buttonTitle ? buttonTitle : "Post"}
                 </button>
               </div>
             </div>
@@ -135,6 +142,13 @@ class PostBox extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return { username: state.firebase.profile.username };
+  return {
+    username: state.firebase.profile.username,
+    postboxImage: state.uploadedImage.postboxImage,
+  };
 };
-export default connect(mapStateToProps, { addPost })(PostBox);
+export default connect(mapStateToProps, {
+  addPost,
+  uploadImage,
+  removeImageFromPostBoxPreview,
+})(PostBox);

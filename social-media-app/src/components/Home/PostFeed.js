@@ -3,7 +3,6 @@ import TextPost from "../TextPost";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
 
 class PostFeed extends Component {
   findMax = (postArray) => {
@@ -38,16 +37,15 @@ class PostFeed extends Component {
   };
 
   render() {
-    const { auth, posts } = this.props;
-    if (!auth.uid) return <Redirect to="/" />;
+    const { posts } = this.props;
     return (
-      <div className="post-feed">
+      <>
         {posts &&
           this.orderedPosts(posts).map((post) => {
             return (
               <TextPost
                 key={post.id}
-                user={post.postAuthor}
+                postAuthor={post.postAuthor}
                 post_body={post.post}
                 createDate={post.createdAt}
                 post_id={post.id}
@@ -63,7 +61,7 @@ class PostFeed extends Component {
               />
             );
           })}
-      </div>
+      </>
     );
   }
 }

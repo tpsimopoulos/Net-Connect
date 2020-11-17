@@ -1,12 +1,13 @@
 import React, { Component } from "react";
-import "../css/TextPost.css";
-import PostAvatar from "./PostAvatar";
+import Avatar from "./Avatar";
 import Modal from "./Modal";
 import ReplyModal from "./ReplyModal";
 import moment from "moment";
-import { likePost, resharePost } from "../actions";
+import { likePost, resharePost, deletePost } from "../actions";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import DropDown from "./DropDown";
+import "../css/TextPost.css";
 // Tie who reshared post to the post id
 class TextPost extends Component {
   state = {
@@ -28,13 +29,18 @@ class TextPost extends Component {
   };
 
   handleLike = (post_id, loggedInUser) => {
-    const { likePost, resharedPostId } = this.props;
+    const { likePost } = this.props;
     likePost(post_id, loggedInUser);
+  };
+
+  handleDeletePost = (post_id, loggedInUser) => {
+    const { deletePost } = this.props;
+    deletePost(post_id, loggedInUser);
   };
 
   render() {
     const {
-      user,
+      postAuthor,
       post_body,
       createDate,
       post_id,
@@ -51,40 +57,49 @@ class TextPost extends Component {
 
     return (
       <div className="text-post">
-        <Link to={`/post/${post_id}`}>
-          <div className={image ? "image-post__content" : "text-post__content"}>
-            <div className="text-post__avatar">
-              <PostAvatar />
-            </div>
-            <div className="text-post__bodyContent">
-              {resharedPost ? (
-                <div className="text-post__Reshare">
-                  <i className="retweet icon"></i>
-                  {postResharer} Reshared
-                </div>
-              ) : (
-                ""
-              )}
-              <div className="text-post__userAndDate">
-                <h7 className="text-post__username">{user}</h7>
-                <h9 className="text-post__createDate">
-                  {moment.unix(createDate.seconds).fromNow()}
-                </h9>
-              </div>
-              {this.props.image ? (
-                <div className="image-post-body">
-                  <img src={image} alt="Picture of Post" />
-                </div>
-              ) : (
-                <div className="text-post__body">{post_body}</div>
-              )}
-            </div>
+        <div className={image ? "image-post__content" : "text-post__content"}>
+          <div className="text-post__avatar">
+            <Avatar postAuthor={postAuthor} />
           </div>
-        </Link>
-        <div className="test-container">
+          <div className="text-post__bodyContent">
+            {resharedPost ? (
+              <div className="text-post__Reshare">
+                <i className="retweet icon"></i>
+                {postResharer} Reshared
+              </div>
+            ) : (
+              ""
+            )}
+            <div className="text-post__userAndDate">
+              <h7 className="text-post__username">{postAuthor}</h7>
+              <h9 className="text-post__createDate">
+                {moment.unix(createDate.seconds).fromNow()}
+              </h9>
+            </div>
+            {this.props.image ? (
+              <div className="image-post-body">
+                <img src={image} alt="Picture of Post" />
+              </div>
+            ) : (
+              <Link to={`/post/${post_id}`} className="text-post__body">
+                {post_body}
+              </Link>
+            )}
+          </div>
+          {postResharer === loggedInUser || postAuthor === loggedInUser ? (
+            <DropDown
+              actionName="Delete"
+              post_id={post_id}
+              onClick={this.handleDeletePost.bind(this, post_id, loggedInUser)}
+            />
+          ) : (
+            ""
+          )}
+        </div>
+        <div className="text-post__actionsContainer">
           <div className="text-post__actions">
             <i
-              onClick={() => this.handleReplyClick(post_id, loggedInUser)}
+              onClick={this.handleReplyClick.bind(this, post_id, loggedInUser)}
               className="reply icon text-post__actions--white"
             ></i>
             {this.state.replyModalOpen ? (
@@ -104,7 +119,7 @@ class TextPost extends Component {
                   ? "button-clicked"
                   : ""
               }`}
-              onClick={() => this.handleReshare(post_id, loggedInUser)}
+              onClick={this.handleReshare.bind(this, post_id, loggedInUser)}
             >
               <span className="text-post__reshareCount">{numOfReshares}</span>
             </i>
@@ -115,9 +130,7 @@ class TextPost extends Component {
                   ? "button-clicked"
                   : ""
               }`}
-              onClick={() => {
-                this.handleLike(post_id, loggedInUser);
-              }}
+              onClick={this.handleLike.bind(this, post_id, loggedInUser)}
             >
               <span className="text-post__likeCount">{numOfLikes}</span>
             </i>
@@ -134,4 +147,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { likePost, resharePost })(TextPost);
+export default connect(mapStateToProps, { likePost, resharePost, deletePost })(
+  TextPost
+);

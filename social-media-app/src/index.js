@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./components/App";
 import throttle from "lodash/throttle";
-import firebase from "./firebase";
+import firebase from "./utilities/firebase";
 import rootReducer from "./reducers/rootReducer";
 import thunk from "redux-thunk";
 import { createStore, applyMiddleware, compose } from "redux";
@@ -13,7 +13,7 @@ import {
   reduxFirestore,
 } from "redux-firestore";
 import { ReactReduxFirebaseProvider, getFirebase } from "react-redux-firebase";
-import { loadState, saveState } from "./localStorage";
+import { loadState, saveState } from "./utilities/localStorage";
 
 const persistedState = loadState();
 const rrfConfig = { userProfile: "users", useFirestoreForProfile: true };

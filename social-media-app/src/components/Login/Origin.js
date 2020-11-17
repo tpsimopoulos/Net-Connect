@@ -3,7 +3,7 @@ import Modal from "../Modal";
 import SignUpModal from "./SignUpModal";
 import PasswordResetModal from "./PasswordResetModal";
 import InputField from "./InputField";
-import history from "../../history";
+import history from "../../utilities/history";
 import { connect } from "react-redux";
 import { signIn, passwordReset } from "../../actions";
 import "../../css/Origin.css";

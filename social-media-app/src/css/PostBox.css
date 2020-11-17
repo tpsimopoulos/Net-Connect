@@ -12,7 +12,7 @@
 .post-box__imagePost {
   display: flex;
   background-color: #242526;
-  /* border: 1px solid blue; */
+  border: 1px solid blue;
   border-radius: 15px;
   /* width: 38rem; */
   width: 100%;
@@ -205,15 +205,17 @@
 .post-box__imageContainer > label:focus,
 .post-box__imageContainer > label:active,
 .post-box__imageContainer > label:hover {
-  color: #0099a1;
+  /* color: #0099a1; */
+  filter: brightness(1.2);
 }
 
 .post-form__button:focus,
 .post-form__button:active,
 .post-form__button:hover {
   outline: none;
-  background-color: #0099a1;
-  border: 1px solid #0099a1;
+  /* background-color: #0099a1;
+  border: 1px solid #0099a1; */
+  filter: brightness(1.1);
 }
 /* 
 @media screen and (min-width: 300px) {

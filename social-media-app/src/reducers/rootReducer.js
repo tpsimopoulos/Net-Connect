@@ -1,13 +1,16 @@
-import authReducer from "./authReducer";
-import postReducer from "./postReducer";
+import { authReducer } from "./authReducer";
+import { postImageUploadReducer } from "./postImageUploadReducer";
+import { userAvatarMappingReducer } from "./userAvatarMappingReducer";
 import { combineReducers } from "redux";
 import { firestoreReducer } from "redux-firestore";
 import { firebaseReducer } from "react-redux-firebase";
+
 const rootReducer = combineReducers({
   firebase: firebaseReducer,
   firestore: firestoreReducer,
   auth: authReducer,
-  // post: postReducer,
+  uploadedImage: postImageUploadReducer,
+  userAvatars: userAvatarMappingReducer,
 });
 
 export default rootReducer;

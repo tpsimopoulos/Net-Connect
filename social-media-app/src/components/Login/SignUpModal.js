@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import history from "../../history";
+import history from "../../utilities/history";
 import InputField from "./InputField";
 import { signUp } from "../../actions";
 import "../../css/signUpModal.css";

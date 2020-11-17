@@ -5,7 +5,7 @@ const initState = {
   signUpErrorField: null,
 };
 
-const authReducer = (state = initState, action) => {
+export const authReducer = (state = initState, action) => {
   switch (action.type) {
     case "LOGIN_SUCCESSFUL":
       return { ...state, authResult: null, loginErrorField: null };
@@ -35,5 +35,3 @@ const authReducer = (state = initState, action) => {
       return state;
   }
 };
-
-export default authReducer;
