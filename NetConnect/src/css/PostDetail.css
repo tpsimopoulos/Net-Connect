@@ -1,0 +1,54 @@
+.post-detail {
+  border: 1px solid #dadde1;
+  border-radius: 1%;
+  width: 100%;
+  height: 90vh;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.post-detail__main {
+  border: 1px solid tomato;
+  width: 45%;
+}
+.home-page__middle::-webkit-scrollbar {
+  display: none;
+}
+
+.home-page__middle::-webkit-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media screen and (min-width: 240px) {
+  .post-detail__main {
+    width: 90%;
+  }
+}
+
+@media screen and (min-width: 540px) {
+  .post-detail__main {
+    width: 85%;
+  }
+}
+
+@media screen and (min-width: 740px) {
+  .post-detail__main {
+    width: 75%;
+  }
+}
+
+@media screen and (min-width: 940px) {
+  .post-detail__main {
+    width: 65%;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .post-detail__main {
+    width: 45%;
+  }
+}

@@ -1,0 +1,149 @@
+.login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* border: 5px solid var(--teal);
+  border-radius: 5px; */
+  height: 100vh;
+  width: 100vw;
+}
+
+/* centers form */
+.login-page__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 5px solid var(--teal);
+  border-radius: 25px;
+}
+
+.login-page__header--color {
+  color: var(--teal);
+}
+
+.login-page__inputFields {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  /* border: 5px solid var(--teal); */
+  border-radius: 5px;
+  width: 75%;
+  height: 75%;
+  padding-top: 1em;
+}
+
+.login-page__inputFields input:nth-of-type(1) {
+  margin-bottom: 0.5em;
+}
+.login-page__inputFields input {
+  background-color: var(--secondary-color);
+  border: none;
+  width: 85%;
+  height: 3em;
+  padding: 1em;
+  /* margin-bottom: 1em; */
+  border-radius: 10px;
+  color: #bdbec0;
+}
+
+.login-page__inputFields input:focus,
+.login-page__inputFields input:active {
+  outline: none;
+  border: 1px solid #bdbec0;
+}
+
+.login-page__inputFields input:focus::placeholder {
+  color: transparent;
+}
+
+input.login-page__passwordInput,
+input.login-page__emailInput {
+  border: 1px solid red;
+  color: red;
+}
+
+.login-page__emailInput--error,
+.login-page__passwordInput--error {
+  width: 85%;
+  text-align: center;
+  color: red;
+  display: inline-block;
+}
+
+.login-page__forgotPassword {
+  display: flex;
+  justify-content: flex-end;
+  color: lightslategrey;
+  font-size: 0.65rem;
+  /* border: 1px solid pink; */
+  width: 84%;
+  cursor: pointer;
+}
+
+.login-page__forgotPassword:hover {
+  text-decoration: none;
+  color: none;
+}
+
+.login-page__forgotPassword:link,
+.login-page__forgotPassword:hover,
+.login-page__forgotPassword:active {
+  color: var(--teal);
+}
+
+.login-page__loginButton {
+  margin-top: 1em;
+  width: 85%;
+  height: 2em;
+  padding: 0;
+  border: 1px solid var(--teal);
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: var(--teal);
+  color: white;
+}
+
+.login-page__signUpButton {
+  margin-top: 0.25em;
+  width: 85%;
+  height: 2em;
+  padding: 0;
+  color: var(--teal);
+  background-color: white;
+  border: 3px solid var(--teal);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.login_page__login-button:focus,
+.login_page__login-button:active,
+.login_page__login-button:hover {
+  outline: none;
+  background-color: #0099a1;
+  border: 1px solid #0099a1;
+}
+
+.login_page__sign-up-button:focus,
+.login_page__sign-up-button:active,
+.login_page__sign-up-button:hover {
+  outline: none;
+  background-color: #ebebeb;
+  border: 3px solid var(--teal);
+}
+
+@media screen and (min-width: 100px) and (max-width: 449px) {
+  .login-page__form {
+    width: 21.5rem;
+    height: 28.5rem;
+  }
+}
+
+@media screen and (min-width: 450px) {
+  .login-page__form {
+    width: 22rem;
+    height: 30rem;
+  }
+}

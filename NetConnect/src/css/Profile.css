@@ -1,0 +1,134 @@
+.profile-page {
+  display: flex;
+  justify-content: center;
+  /* border: 2px solid var(--teal); */
+  margin-top: 7.5vh;
+  height: 86.5vh;
+}
+
+.profile-page__detail {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border: 1px solid pink;
+  border-radius: 5px;
+  height: 100%;
+  width: 40%;
+}
+
+.profile-page__editProfileOption {
+  display: flex;
+  /* border: 1px solid blue; */
+  color: #f5f6f7;
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.profile-page__avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid pink; */
+  width: 100px;
+}
+
+.profile-page__avatar > img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid #00adb5;
+}
+
+.profile-page__menu {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--teal);
+  margin-top: 1.5em;
+  width: 100%;
+}
+
+.user-info {
+  /* border: 1px solid orange; */
+  margin-top: 3%;
+  color: var(--teal);
+  font-size: 1.5em;
+}
+
+.active-item,
+.item {
+  color: var(--white);
+  font-size: 1em;
+  font-weight: 100;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.profile-page__menu a[class="active-item"] {
+  color: var(--teal);
+}
+
+.profile-page__menu a:hover {
+  cursor: pointer;
+  filter: brightness(1.2);
+  color: var(--teal);
+}
+
+.edit-profile-container {
+  border: 1px solid white;
+  box-shadow: inset 0 0 7px #000000;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.edit-profile-form {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar-upload {
+  color: grey;
+  font-size: 1.5rem;
+  margin: auto;
+  cursor: pointer;
+}
+
+.edit-profile-form > input {
+  display: none;
+}
+
+@media screen and (min-width: 0px) {
+  .profile-page__detail {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 320px) {
+  .profile-page__detail {
+    width: 90%;
+  }
+}
+
+@media screen and (min-width: 540px) {
+  .profile-page__detail {
+    width: 70%;
+  }
+}
+
+@media screen and (min-width: 740px) {
+  .profile-page__detail {
+    width: 60%;
+  }
+}
+
+@media screen and (min-width: 940px) {
+  .profile-page__detail {
+    max-width: 35rem;
+  }
+}
