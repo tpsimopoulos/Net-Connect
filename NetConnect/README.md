@@ -1,68 +1,55 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# NetConnect App
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+Social media app that allows for interactions familiar to anyone who uses a social media platform.
 
-### `npm start`
+## Table of Contents
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Overview](#overview)
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
 
-### `npm test`
+## Features
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- User Account Creation & Authentication
+- Text & Image Posts
+- Create/Delete Posts
+- Follow/Unfollow other Users
+- Like & Reshare Posts
+- Profile page that aggregates all posts interacted with
 
-### `npm run build`
+## Technologies Used
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Languages
+- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript): A versatile programming language for creating dynamic content on the web.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### Web Framework
+- [React](https://react.dev): A JavaScript library for building user interfaces, often used for creating single-page applications where UI updates are frequent and dynamic.
+- [HTML](https://developer.mozilla.org/en-US/docs/Web/HTML): The standard markup language for creating web pages.
+- [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS): Cascading Style Sheets for styling HTML documents.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### State Management
+- [Redux](https://redux.js.org): A predictable state container for JavaScript apps, commonly used with React to manage application state.
 
-### `npm run eject`
+### Database
+- [Firebase Realtime Database](https://firebase.google.com/docs/database): A NoSQL cloud database that allows developers to store and sync data across clients in real-time.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Overview
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Home Page
+![App's Home Screen](NetConnect_Images/Home%20Screen.png)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Login 
+![App's Login Screen](NetConnect_Images/Login%20Screen.png)
 
-## Learn More
+### Account Creation 
+![App's Create Account Screen](NetConnect_Images/Creation%20Account%20Screen.png)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
 
-### Analyzing the Bundle Size
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
